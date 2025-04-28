@@ -23,9 +23,9 @@ public class Filter {
 
                 })
                 .formLogin(formLogin -> {
-                    formLogin
-                            .defaultSuccessUrl("#", true)
-                            .permitAll();
+//                    formLogin
+//                            .defaultSuccessUrl("#", true)
+//                            .permitAll();
                 });
         return http.build();
     }
