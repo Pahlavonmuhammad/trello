@@ -22,6 +22,7 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private boolean is_verified;
     @ManyToMany(fetch = FetchType.EAGER)
     List<Role> roles;
     @ManyToOne(fetch = FetchType.EAGER)

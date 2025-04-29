@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cabinet - Trello</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #0079bf;
+            color: white;
+        }
+        .header img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .header-buttons a {
+            margin-left: 10px;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #0079bf;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .header-buttons a:hover {
+            background-color: #e0e0e0;
+        }
+        .welcome-section {
+            text-align: center;
+            padding: 20px;
+        }
+        .about-trello {
+            padding: 40px;
+            background-color: #ffffff;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .about-trello h2 {
+            color: #0079bf;
+            margin-bottom: 20px;
+        }
+        .about-trello p {
+            color: #333;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .feature-card {
+            background-color: #f0f2f5;
+            padding: 20px;
+            border-radius: 8px;
+            width: 200px;
+            margin: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .feature-card h3 {
+            color: #0079bf;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <!-- Default rasm, agar user login qilgan bo'lsa attachment tekshiriladi -->
+    <img th:src="${user != null && user.attachment != null} ? ${user.attachment} : '/default.jpg'" alt="Profile Image">
+
+    <div class="header-buttons">
+        <!-- Agar user anonymous bo'lsa -->
+        <div sec:authorize="isAnonymous()">
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        </div>
+
+        <!-- Agar user autentifikatsiya qilgan bo'lsa -->
+        <div sec:authorize="isAuthenticated()">
+            <a href="/logout">Logout</a>
+            <a href="/my-pages">See My Pages</a>
+        </div>
+    </div>
+</div>
+
+<div class="welcome-section">
+    <h2>Welcome to Your Cabinet</h2>
+    <p>This is your Trello cabinet page.</p>
+</div>
+
+<div class="about-trello">
+    <h2>Discover Trello – Your Ultimate Productivity Tool</h2>
+    <p>
+        Trello is a powerful project management tool that helps you organize your tasks, collaborate with your team, and achieve your goals with ease. Whether you're managing a personal project or working with a global team, Trello's intuitive boards, lists, and cards make it simple to visualize your workflow and stay on track.
+    </p>
+    <div class="features">
+        <div class="feature-card">
+            <h3>Organize with Boards</h3>
+            <p>Create boards for each project and keep all your tasks in one place.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Collaborate Seamlessly</h3>
+            <p>Invite team members, assign tasks, and track progress in real-time.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Customize Your Workflow</h3>
+            <p>Add labels, due dates, checklists, and more to fit your needs.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -18,19 +18,21 @@ public class Filter {
         http
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers("login").permitAll()
+                            .requestMatchers("/login", "/register","/cabinet","/default.jpg").permitAll()
                             .anyRequest().authenticated();
 
                 })
                 .formLogin(formLogin -> {
-//                    formLogin
-//                            .defaultSuccessUrl("#", true)
-//                            .permitAll();
+                    formLogin
+                            .defaultSuccessUrl("/cabinet", true)
+                            .permitAll();
                 });
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
+
