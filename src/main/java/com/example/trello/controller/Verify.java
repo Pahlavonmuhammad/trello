@@ -4,6 +4,7 @@ import com.example.trello.DTO.UserDTO;
 import com.example.trello.entity.Role;
 import com.example.trello.entity.Roles;
 import com.example.trello.entity.User;
+import com.example.trello.repo.RoleRepository;
 import com.example.trello.repo.UserRepostory;
 import com.example.trello.service.EmailSender;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +24,7 @@ public class Verify {
     private final EmailSender emailSender;
     private final PasswordEncoder passwordEncoder;
     private final UserRepostory userRepostory;
+    private final RoleRepository roleRepository;
     @GetMapping("/verify")
     public String verify(HttpSession session) {
         String randomCode = emailSender.randomCode();
@@ -42,8 +44,9 @@ public class Verify {
             regsiteredUser.setPassword(passwordEncoder.encode(user.getPassword()));
             regsiteredUser.setUsername(user.getUsername());
             regsiteredUser.set_verified(true);
-            List<Role> roles = new ArrayList<>();
-            roles.add(new Role(null, Roles.PROGRAMMER.name()));
+            Role role=roleRepository.findByRole(Roles.PROGRAMMER.name());
+            List<Role> roles=new ArrayList<>();
+            roles.add(role);
             regsiteredUser.setRoles(roles);
             userRepostory.save(regsiteredUser);
         }
