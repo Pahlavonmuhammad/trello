@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Board</title>
+    <style>
+        .board {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .status-column {
+            flex: 1;
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 300px;
+        }
+
+        .status-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .task-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .task-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .task-title {
+            margin-top: 8px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .task-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .arrow-btn {
+            background: #ddd;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .admin-actions {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+        }
+
+        .admin-actions a {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 8px 16px;
+            font-size: 14px;
+            background-color: #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            color: black;
+        }
+
+        .admin-actions a:hover {
+            background-color: #bbb;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Only show to ADMIN -->
+<div class="admin-actions" sec:authorize="hasRole('ADMIN')">
+    <a th:href="@{/task/add}">Add</a>
+    <a th:href="@{/task/manage-orders}">Manage Orders</a>
+</div>
+
+<div class="board">
+
+    <!-- Loop through Statuses -->
+    <div class="status-column" th:each="status : ${statusList}">
+        <div class="status-title" th:text="${status.name}">Status</div>
+
+        <!-- Loop through Tasks in this Status -->
+        <div class="task-card"
+             th:each="task : ${taskList}"
+             th:if="${task.status.id} == ${status.id}">
+
+            <img class="task-image" th:src="${task.attachment.url}" alt="Task Image"/>
+
+            <div class="task-title" th:text="${task.title}">Task Title</div>
+
+            <div class="user-info">
+                <img th:src="${user.attachment != null} ? ${user.attachment} : '/default.jpg'" alt="Profile Image">
+                <span th:text="${task.user.username}">Username</span>
+            </div>
+
+            <div class="task-actions">
+                <form th:action="@{/task/moveLeft/{id}(id=${task.id})}" method="post">
+                    <button class="arrow-btn">&laquo;</button>
+                </form>
+                <form th:action="@{/task/moveRight/{id}(id=${task.id})}" method="post">
+                    <button class="arrow-btn">&raquo;</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
