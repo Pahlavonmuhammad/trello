@@ -27,8 +27,6 @@ public class User implements UserDetails {
     List<Role> roles;
     @ManyToOne(fetch = FetchType.EAGER)
     Attachment attachment;
-    @Transient
-    private String verified_code; //verifikatsiya qilishi kerak bo'lgan odam shu yerga codeni yuklaydi
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

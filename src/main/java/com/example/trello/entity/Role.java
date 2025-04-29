@@ -16,10 +16,10 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Enumerated(EnumType.STRING)
-    private Roles role;
+    private String role;
 
     @Override
     public String getAuthority() {
-        return "ROLE_"+role.name(); //bu oxirida kerak boladi hech narsaga tegmang
+        return "ROLE_"+role; //bu oxirida kerak boladi hech narsaga tegmang
     }
 }
