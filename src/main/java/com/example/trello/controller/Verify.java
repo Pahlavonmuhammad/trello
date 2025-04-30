@@ -5,7 +5,7 @@ import com.example.trello.entity.Role;
 import com.example.trello.entity.Roles;
 import com.example.trello.entity.User;
 import com.example.trello.repo.RoleRepository;
-import com.example.trello.repo.UserRepostory;
+import com.example.trello.repo.UserRepository;
 import com.example.trello.service.EmailSender;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import java.util.List;
 public class Verify {
     private final EmailSender emailSender;
     private final PasswordEncoder passwordEncoder;
-    private final UserRepostory userRepostory;
+    private final UserRepository userRepostory;
     private final RoleRepository roleRepository;
     @GetMapping("/verify")
     public String verify(HttpSession session) {

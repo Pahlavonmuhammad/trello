@@ -117,7 +117,11 @@
              th:each="task : ${taskList}"
              th:if="${task.status.id} == ${status.id}">
 
-            <img class="task-image" th:src="${task.attachment.url}" alt="Task Image"/>
+            <img th:if="${task.attachment != null}"
+                 th:src="@{/images/{id}(id=${task.attachment.id})}"
+                 alt="Task Image"/>
+
+            <span th:if="${task.attachment == null}">Picture</span>
 
             <div class="task-title" th:text="${task.title}">Task Title</div>
 
@@ -125,15 +129,26 @@
                 <img th:src="${user.attachment != null} ? ${user.attachment} : '/default.jpg'" alt="Profile Image">
                 <span th:text="${task.user.username}">Username</span>
             </div>
-
             <div class="task-actions">
                 <form th:action="@{/task/moveLeft/{id}(id=${task.id})}" method="post">
                     <button class="arrow-btn">&laquo;</button>
                 </form>
+
+                <!-- Comment Button in the middle -->
+                <form th:action="@{/task/comment/{id}(id=${task.id})}" method="get">
+                    <button class="arrow-btn">💬</button>
+                </form>
+
+                <!-- Delete Button only for ADMIN -->
+                <form th:action="@{/task/delete/{id}(id=${task.id})}" method="post" sec:authorize="hasRole('ADMIN')">
+                    <button class="arrow-btn" onclick="return confirm('Are you sure you want to delete this task?')">🗑️</button>
+                </form>
+
                 <form th:action="@{/task/moveRight/{id}(id=${task.id})}" method="post">
                     <button class="arrow-btn">&raquo;</button>
                 </form>
             </div>
+
         </div>
     </div>
 
