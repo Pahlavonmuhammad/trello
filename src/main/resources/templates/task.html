@@ -64,6 +64,8 @@
             display: flex;
             justify-content: space-between;
             margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 5px;
         }
 
         .arrow-btn {
@@ -100,8 +102,8 @@
 </head>
 <body>
 
-<!-- Only show to ADMIN -->
-<div class="admin-actions" sec:authorize="hasRole('ADMIN')">
+<!-- Only show to ADMIN or MAINTAINER -->
+<div class="admin-actions" sec:authorize="hasAnyRole('ADMIN','MAINTAINER')">
     <a th:href="@{/task/add}">Add</a>
     <a th:href="@{/task/manage-orders}">Manage Orders</a>
 </div>
@@ -115,38 +117,53 @@
         <!-- Loop through Tasks in this Status -->
         <div class="task-card"
              th:each="task : ${taskList}"
-             th:if="${task.status.id} == ${status.id}">
+             th:if="${task.status.id == status.id}">
 
-            <img th:if="${task.attachment != null}"
+            <!-- Task Image -->
+            <img class="task-image"
+                 th:if="${task.attachment != null}"
                  th:src="@{/images/{id}(id=${task.attachment.id})}"
                  alt="Task Image"/>
+            <span th:if="${task.attachment == null}">No Image</span>
 
-            <span th:if="${task.attachment == null}">Picture</span>
-
+            <!-- Task Title -->
             <div class="task-title" th:text="${task.title}">Task Title</div>
 
+            <!-- User Info -->
             <div class="user-info">
-                <img th:src="${user.attachment != null} ? ${user.attachment} : '/default.jpg'" alt="Profile Image">
-                <span th:text="${task.user.username}">Username</span>
+                <!-- If user and user.attachment are present -->
+                <img class="user-avatar"
+                     th:if="${task.user != null and task.user.attachment != null}"
+                     th:src="@{'/images/user/' + ${task.user.attachment.id}}"
+                     alt="User Avatar"/>
+
+                <!-- If user or user.attachment is missing -->
+                <img class="user-avatar"
+                     th:unless="${task.user != null and task.user.attachment != null}"
+                     src="/default.jpg"
+                     alt="Default Avatar"/>
+                <span th:text="${task.user != null ? task.user.username : 'No User'}">Username</span>
             </div>
+
+            <!-- Task Actions -->
             <div class="task-actions">
+
                 <form th:action="@{/task/moveLeft/{id}(id=${task.id})}" method="post">
                     <button class="arrow-btn">&laquo;</button>
                 </form>
 
-                <!-- Comment Button in the middle -->
                 <form th:action="@{/task/comment/{id}(id=${task.id})}" method="get">
                     <button class="arrow-btn">💬</button>
                 </form>
-
-                <!-- Delete Button only for ADMIN -->
-                <form th:action="@{/task/delete/{id}(id=${task.id})}" method="post" sec:authorize="hasRole('ADMIN')">
-                    <button class="arrow-btn" onclick="return confirm('Are you sure you want to delete this task?')">🗑️</button>
+                <form th:action="@{/task/update/{id}(id=${task.id})}" method="get"
+                      sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
+                    <button class="arrow-btn">Update</button>
                 </form>
 
                 <form th:action="@{/task/moveRight/{id}(id=${task.id})}" method="post">
                     <button class="arrow-btn">&raquo;</button>
                 </form>
+
             </div>
 
         </div>

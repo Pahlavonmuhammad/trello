@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .user-select {
+            margin-bottom: 15px;
+        }
+
+        .user-select span {
+            margin-left: 8px;
+        }
+
+        .attachment-preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        .no-user {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Update Task</h1>
+
+    <form th:action="@{'/task/update/process/' + ${task.id}}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="put"/>
+
+        <!-- Title -->
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" th:value="${task.title}" required/>
+
+        <!-- User selection -->
+        <label>Select a User:</label>
+        <div class="user-select" th:each="u : ${users}">
+            <input type="radio" name="userId" th:value="${u.id}"
+                   th:checked="${task.user != null and task.user.id == u.id}"/>
+            <span th:text="${u.username}">Username</span>
+        </div>
+        <div class="no-user">
+            <input type="radio" name="userId" value="" th:checked="${task.user == null}"/> No user
+        </div>
+
+        <!-- Existing attachment -->
+        <div class="attachment-preview" th:if="${task.attachment != null}">
+            <label>Current Attachment:</label>
+            <img th:src="@{'/images/' + ${task.attachment.id}}" alt="Attachment Image"/>
+        </div>
+
+        <!-- Upload new attachment -->
+        <label for="attachment">Upload New Attachment (optional):</label>
+        <input type="file" id="attachment" name="attachment"/>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn">Update Task</button>
+    </form>
+</div>
+
+</body>
+</html>
