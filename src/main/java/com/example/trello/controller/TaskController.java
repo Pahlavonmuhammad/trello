@@ -51,17 +51,29 @@ public class TaskController {
         }else {
             task.setUser(null);
         }
-        if (attachment != null) {
-            Attachment setAttachment=new Attachment();
+        if (attachment != null && !attachment.isEmpty()) {
+            Attachment setAttachment = new Attachment();
             setAttachment.setFile_type(attachment.getContentType());
             setAttachment.setContent(attachment.getBytes());
             attachmentRepository.save(setAttachment);
             task.setAttachment(setAttachment);
-        }else {
-            task.setAttachment(null);
+        } else if (task.getAttachment() == null) {
+            Optional<Attachment> defaultAttachment = attachmentRepository.findById(task.getAttachment().getId()); // yoki boshqa usul bilan
+            if (defaultAttachment.isPresent()) {
+                task.setAttachment(defaultAttachment.get());
+            }
         }
+
         taskRepository.save(task);
         return "redirect:/task"; // Or wherever you want to redirect
+    }
+    @GetMapping("/task/comment/{id}")
+    public String commentTask(@PathVariable int id, Model model) {
+        List<User> allUsers = userRepository.findAll();
+        Task task = taskRepository.findById(id);
+        model.addAttribute("allUsers", allUsers);
+        model.addAttribute("task", task);
+        return "comments";
     }
 
 

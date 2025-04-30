@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Comments</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0;
+            box-sizing: border-box;
+        }
+
+        .comment-box {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .user-checkbox {
+            margin-bottom: 5px;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        hr {
+            margin: 30px 0;
+        }
+
+        img {
+            max-width: 200px;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Task Comments</h1>
+
+<div>
+    <form th:action="@{/task/update/process/{id}(id=${task.id})}" method="post" enctype="multipart/form-data">
+
+        <!-- Attachment Image -->
+        <div th:if="${task.attachment != null}">
+            <label>Attachment Image:</label>
+            <img th:src="@{'/images/' + ${task.attachment.id}}" alt="Attachment"/>
+        </div>
+
+        <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
+            <label>Upload New Attachment:</label>
+            <input type="file" name="attachment"/>
+        </div>
+
+        <!-- Title -->
+        <label>Task Title:</label>
+        <div>
+            <span th:text="${task.title}"></span>
+            <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
+                <input type="text" name="title" th:value="${task.title}" />
+            </div>
+        </div>
+
+        <!-- Users radio buttons (since only one user can be assigned) -->
+        <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
+            <label>Assign User:</label>
+            <div th:each="user : ${allUsers}" class="user-checkbox">
+                <label>
+                    <input type="radio" name="userId"
+                           th:value="${user.id}"
+                           th:checked="${task.user != null and task.user.id == user.id}" />
+                    <span th:text="${user.username}">Username</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
+            <button type="submit" class="button">Save Changes</button>
+        </div>
+
+    </form>
+</div>
+
+<hr/>
+
+<!-- Comments Section -->
+<div>
+    <h2>Comments</h2>
+    <div th:each="comment : ${task.comments}" class="comment-box">
+        <p>
+            <strong th:text="${comment.user.username}">User</strong>
+            <span th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy, HH:mm')}"></span>:
+            <span th:text="${comment.comment}">Comment text</span>
+        </p>
+    </div>
+
+    <!-- Add Comment Form -->
+    <form th:action="@{/comments/add}" method="post">
+        <input type="hidden" name="taskId" th:value="${task.id}"/>
+        <textarea name="comment" placeholder="Add a comment..."></textarea><br/>
+        <button type="submit" class="button">Add Comment</button>
+    </form>
+</div>
+
+</body>
+</html>

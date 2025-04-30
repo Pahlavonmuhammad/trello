@@ -19,6 +19,6 @@ public class Comment {
     @ManyToOne
     private User user;
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt=LocalDateTime.now();
     private String comment;
 }
