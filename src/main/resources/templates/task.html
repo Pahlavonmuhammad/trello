@@ -104,7 +104,8 @@
 
 <!-- Only show to ADMIN or MAINTAINER -->
 <div class="admin-actions" sec:authorize="hasAnyRole('ADMIN','MAINTAINER')">
-    <a th:href="@{/task/add}">Add</a>
+    <a th:href="@{/status/add}">Add Status</a>
+    <a th:href="@{/task/add}">Add Task</a>
     <a th:href="@{/task/manage-orders}">Manage Orders</a>
 </div>
 

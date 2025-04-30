@@ -1,9 +1,11 @@
 package com.example.trello.controller;
 
 import com.example.trello.entity.Attachment;
+import com.example.trello.entity.Status;
 import com.example.trello.entity.Task;
 import com.example.trello.entity.User;
 import com.example.trello.repo.AttachmentRepository;
+import com.example.trello.repo.StatusRepository;
 import com.example.trello.repo.TaskRepository;
 import com.example.trello.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class TaskController {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final AttachmentRepository attachmentRepository;
+    private final StatusRepository statusRepository;
 
     @GetMapping("/task/update/{id}")
     public String updateTask(@PathVariable int id, Model model) {
@@ -75,6 +78,22 @@ public class TaskController {
         model.addAttribute("task", task);
         return "comments";
     }
+    @GetMapping("/task/add")
+    public String addTask(Model model) {
+        return "addTask";
+    }
+    @PostMapping("/task/add/process")
+    public String addTask(@RequestParam String title,
+                          @RequestParam(value = "file", required = false) MultipartFile file,
+                          Model model) {
+        Task task = new Task();
+        task.setTitle(title);
+        Status defaultStatus = statusRepository.findByPosition_number(1);
+        task.setStatus(defaultStatus);
+        taskRepository.save(task);
+        return "redirect:/task";
+    }
+
 
 
 }
