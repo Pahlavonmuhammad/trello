@@ -3,132 +3,356 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Task Comments</title>
+    <title>Task Discussion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #5a67d8;
+            --primary-light: #7f8ff4;
+            --dark: #1a202c;
+            --dark-light: #2d3748;
+            --dark-lighter: #3c4658;
+            --text: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --success: #48bb78;
+            --border: #4a5568;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
         h1, h2 {
-            color: #2c3e50;
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 2rem;
         }
 
         label {
-            font-weight: bold;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.5rem;
         }
 
         input[type="text"], textarea {
             width: 100%;
-            padding: 8px;
-            margin: 8px 0;
-            box-sizing: border-box;
+            padding: 12px 16px;
+            margin: 8px 0 20px;
+            background-color: var(--dark-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
         }
 
-        .comment-box {
-            background: #f8f9fa;
-            border-left: 4px solid #007bff;
-            padding: 10px;
-            margin-bottom: 10px;
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
         }
 
-        .user-checkbox {
-            margin-bottom: 5px;
+        textarea {
+            min-height: 120px;
+            resize: vertical;
         }
 
-        .button {
-            background-color: #007bff;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-top: 10px;
+        .task-header {
+            background-color: var(--dark-light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        hr {
-            margin: 30px 0;
+        .attachment-container {
+            margin: 20px 0;
         }
 
         img {
-            max-width: 200px;
-            display: block;
+            max-width: 100%;
+            border-radius: 8px;
             margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+        }
+
+        img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .comment-box {
+            background-color: var(--dark-light);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 8px 8px 0;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .comment-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--primary-light));
+        }
+
+        .comment-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .comment-user {
+            font-weight: 600;
+            color: var(--primary-light);
+        }
+
+        .comment-time {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .comment-text {
+            margin: 0;
+            line-height: 1.7;
+        }
+
+        .user-checkbox {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-checkbox label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            transition: var(--transition);
+            margin-bottom: 0;
+        }
+
+        .user-checkbox label:hover {
+            background-color: var(--dark-lighter);
+        }
+
+        .user-checkbox input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--primary);
+        }
+
+        .button {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .button:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(90, 103, 216, 0.3);
+        }
+
+        hr {
+            border: none;
+            height: 1px;
+            background-color: var(--border);
+            margin: 40px 0;
+        }
+
+        .comment-form {
+            background-color: var(--dark-light);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        .file-input-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 12px 20px;
+            background-color: var(--dark-lighter);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .file-input-label:hover {
+            background-color: var(--border);
+        }
+
+        input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .comment-box {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .task-header {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>Task Discussion</h1>
 
-<h1>Task Comments</h1>
+    <div class="task-header">
+        <form th:action="@{/task/update/process/{id}(id=${task.id})}" method="post" enctype="multipart/form-data">
 
-<div>
-    <form th:action="@{/task/update/process/{id}(id=${task.id})}" method="post" enctype="multipart/form-data">
+            <!-- Attachment Image -->
+            <div class="attachment-container" th:if="${task.attachment != null}">
+                <label>Current Attachment:</label>
+                <img th:src="@{'/images/' + ${task.attachment.id}}" alt="Task attachment" />
+            </div>
 
-        <!-- Attachment Image -->
-        <div th:if="${task.attachment != null}">
-            <label>Attachment Image:</label>
-            <img th:src="@{'/images/' + ${task.attachment.id}}" alt="Attachment"/>
-        </div>
+            <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
+                <div class="file-input-container">
+                    <label class="file-input-label">📁 Upload New Attachment</label>
+                    <input type="file" name="attachment"/>
+                </div>
+            </div>
 
-        <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
-            <label>Upload New Attachment:</label>
-            <input type="file" name="attachment"/>
-        </div>
-
-        <!-- Title -->
-        <label>Task Title:</label>
-        <div>
-            <span th:text="${task.title}"></span>
+            <!-- Title -->
+            <label>Task Title:</label>
+            <div sec:authorize="!hasAnyRole('ADMIN', 'MAINTAINER')">
+                <h3 th:text="${task.title}" style="margin: 0; color: var(--text);"></h3>
+            </div>
             <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
                 <input type="text" name="title" th:value="${task.title}" />
             </div>
-        </div>
 
-        <!-- Users radio buttons (since only one user can be assigned) -->
-        <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
-            <label>Assign User:</label>
-            <div th:each="user : ${allUsers}" class="user-checkbox">
-                <label>
-                    <input type="radio" name="userId"
-                           th:value="${user.id}"
-                           th:checked="${task.user != null and task.user.id == user.id}" />
-                    <span th:text="${user.username}">Username</span>
-                </label>
+            <!-- Users radio buttons -->
+            <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
+                <label>Assign To:</label>
+                <div th:each="user : ${allUsers}" class="user-checkbox">
+                    <label>
+                        <input type="radio" name="userId"
+                               th:value="${user.id}"
+                               th:checked="${task.user != null and task.user.id == user.id}" />
+                        <span th:text="${user.username}">Username</span>
+                    </label>
+                </div>
             </div>
-        </div>
 
-        <!-- Save Button -->
-        <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
-            <button type="submit" class="button">Save Changes</button>
-        </div>
-
-    </form>
-</div>
-
-<hr/>
-
-<!-- Comments Section -->
-<div>
-    <h2>Comments</h2>
-    <div th:each="comment : ${task.comments}" class="comment-box">
-        <p>
-            <strong th:text="${comment.user.username}">User</strong>
-            <span th:text="${#temporals.format(comment.createdAt, 'dd MMM yyyy, HH:mm')}"></span>:
-            <span th:text="${comment.comment}">Comment text</span>
-        </p>
+            <!-- Save Button -->
+            <div sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
+                <button type="submit" class="button">💾 Save Changes</button>
+            </div>
+        </form>
     </div>
 
-    <!-- Add Comment Form -->
-    <form th:action="@{/comments/add}" method="post">
-        <input type="hidden" name="taskId" th:value="${task.id}"/>
-        <textarea name="comment" placeholder="Add a comment..."></textarea><br/>
-        <button type="submit" class="button">Add Comment</button>
-    </form>
+    <hr/>
+
+    <!-- Comments Section -->
+    <div>
+        <h2>Discussion Thread</h2>
+
+        <div th:each="comment : ${task.comments}" class="comment-box">
+            <div class="comment-header">
+                <span class="comment-user" th:text="${comment.user.username}">User</span>
+                <span class="comment-time" th:text="${#temporals.format(comment.createdAt, 'MMM d, yyyy • h:mm a')}">Date</span>
+            </div>
+            <p class="comment-text" th:text="${comment.comment}">Comment text</p>
+        </div>
+
+        <!-- Add Comment Form -->
+        <div class="comment-form">
+            <form th:action="@{/comments/add}" method="post">
+                <input type="hidden" name="taskId" th:value="${task.id}"/>
+                <label>Add to Discussion:</label>
+                <textarea name="comment" placeholder="Share your thoughts..."></textarea><br/>
+                <button type="submit" class="button">💬 Post Comment</button>
+            </form>
+        </div>
+    </div>
 </div>
 
+<script>
+    // Add animation to comments as they load
+    document.addEventListener('DOMContentLoaded', function() {
+        const comments = document.querySelectorAll('.comment-box');
+        comments.forEach((comment, index) => {
+            setTimeout(() => {
+                comment.style.opacity = '1';
+                comment.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
 </body>
 </html>

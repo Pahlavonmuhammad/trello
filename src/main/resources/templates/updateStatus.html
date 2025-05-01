@@ -3,40 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manage Statuses</title>
+  <title>Manage Statuses | Trello</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #5a67d8;
+      --primary-light: #7f8ff4;
+      --dark: #1a202c;
+      --dark-light: #2d3748;
+      --dark-lighter: #3c4658;
+      --text: #e2e8f0;
+      --text-secondary: #a0aec0;
+      --success: #48bb78;
+      --error: #f56565;
+      --border: #4a5568;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark);
+      color: var(--text);
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background-color: var(--dark-light);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 0.6s ease-out;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    h2 {
+      color: var(--text);
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
     table {
       width: 100%;
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin: 1.5rem 0;
+      background-color: var(--dark-lighter);
+      border-radius: 12px;
+      overflow: hidden;
     }
-    th, td {
-      padding: 8px;
-      border: 1px solid #ccc;
-    }
-    .action-btn {
-      padding: 10px 20px;
-      background-color: #4CAF50;
+
+    th {
+      background-color: var(--primary);
       color: white;
-      border: none;
+      padding: 1rem;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    input[type="text"],
+    input[type="number"] {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background-color: var(--dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
       cursor: pointer;
     }
-  </style>
-  <script>
-    function checkDuplicatePositionNumber() {
-      const seen = new Set();
-      for (let input of document.querySelectorAll('.position-number')) {
-        if (seen.has(input.value)) {
-          alert('Duplicate position number detected.');
-          return false;
-        }
-        seen.add(input.value);
+
+    .action-btn {
+      padding: 0.85rem 2rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-btn:hover {
+      background-color: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
+    }
+
+    .action-btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
-      return true;
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    function onSubmit() {
-      return checkDuplicatePositionNumber();
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
     }
-  </script>
+
+    .error-highlight {
+      animation: shake 0.5s ease;
+      border-color: var(--error) !important;
+      box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.2) !important;
+    }
+
+    /* Custom scrollbar for table */
+    .table-container {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border-radius: 12px;
+    }
+
+    ::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--dark);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--dark-lighter);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem;
+      }
+
+      .container {
+        padding: 1.5rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      th, td {
+        padding: 0.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
 <div class="container">
@@ -45,35 +209,89 @@
   <form th:action="@{/status/update}" method="post" onsubmit="return onSubmit()">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
-    <table>
-      <thead>
-      <tr>
-        <th>Status Name</th>
-        <th>Is Active</th>
-        <th>Position #</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="status, iterStat : ${statuses}">
-        <input type="hidden" th:name="${'statuses[' + iterStat.index + '].id'}" th:value="${status.id}" />
-        <td>
-          <input type="text" th:name="${'statuses[' + iterStat.index + '].name'}" th:value="${status.name}" required />
-        </td>
-        <td>
-          <input type="checkbox" th:name="${'statuses[' + iterStat.index + '].is_active'}" th:checked="${status.is_active}" />
-        </td>
-        <td>
-          <input type="number" class="position-number" th:name="${'statuses[' + iterStat.index + '].position_number'}" th:value="${status.position_number}" required />
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div class="table-container">
+      <table>
+        <thead>
+        <tr>
+          <th>Status Name</th>
+          <th>Is Active</th>
+          <th>Position #</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="status, iterStat : ${statuses}">
+          <input type="hidden" th:name="${'statuses[' + iterStat.index + '].id'}" th:value="${status.id}" />
+          <td>
+            <input type="text"
+                   th:name="${'statuses[' + iterStat.index + '].name'}"
+                   th:value="${status.name}"
+                   required />
+          </td>
+          <td>
+            <input type="checkbox"
+                   th:name="${'statuses[' + iterStat.index + '].is_active'}"
+                   th:checked="${status.is_active}" />
+          </td>
+          <td>
+            <input type="number"
+                   class="position-number"
+                   th:name="${'statuses[' + iterStat.index + '].position_number'}"
+                   th:value="${status.position_number}"
+                   required
+                   min="1" />
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 
-    <div style="text-align:center; margin-top:20px;">
-      <button type="submit" class="action-btn">Update All Statuses</button>
+    <div class="btn-container">
+      <button type="submit" class="action-btn">
+        <span>💾 Update All Statuses</span>
+      </button>
     </div>
   </form>
-
 </div>
+
+<script>
+  function checkDuplicatePositionNumber() {
+    const inputs = document.querySelectorAll('.position-number');
+    const seen = new Set();
+    let hasDuplicate = false;
+
+    // Reset error state
+    inputs.forEach(input => input.classList.remove('error-highlight'));
+
+    // Check for duplicates
+    for (let input of inputs) {
+      if (seen.has(input.value)) {
+        input.classList.add('error-highlight');
+        hasDuplicate = true;
+      }
+      seen.add(input.value);
+    }
+
+    if (hasDuplicate) {
+      const firstError = document.querySelector('.error-highlight');
+      firstError.focus();
+      alert('Error: Duplicate position numbers detected. Each status must have a unique position number.');
+      return false;
+    }
+    return true;
+  }
+
+  function onSubmit() {
+    return checkDuplicatePositionNumber();
+  }
+
+  // Add animation on load
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.querySelector('.container');
+    setTimeout(() => {
+      container.style.opacity = '1';
+      container.style.transform = 'translateY(0)';
+    }, 100);
+  });
+</script>
 </body>
 </html>

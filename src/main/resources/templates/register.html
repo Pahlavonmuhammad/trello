@@ -3,67 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - Trello</title>
+  <title>Join Trello</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #5a67d8;
+      --primary-light: #7f8ff4;
+      --dark: #1a202c;
+      --dark-light: #2d3748;
+      --text: #e2e8f0;
+      --text-secondary: #a0aec0;
+      --success: #48bb78;
+      --error: #f56565;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark);
+      color: var(--text);
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
-      background-color: #f0f2f5;
+      line-height: 1.6;
+      background-image: radial-gradient(circle at 10% 20%, rgba(90, 103, 216, 0.1) 0%, rgba(90, 103, 216, 0) 90%);
     }
+
     .register-container {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      width: 300px;
+      background-color: var(--dark-light);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      width: 380px;
+      max-width: 90%;
       text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transform: translateY(0);
+      transition: var(--transition);
+      animation: fadeInUp 0.6s ease-out;
     }
-    .register-container h2 {
-      margin-bottom: 20px;
+
+    .register-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
     }
-    .register-container input {
+
+    h2 {
+      color: var(--text);
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+    }
+
+    .logo {
+      width: 80px;
+      margin-bottom: 1.5rem;
+      filter: brightness(0) invert(1);
+      opacity: 0.9;
+    }
+
+    input {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+      padding: 0.85rem 1rem;
+      margin: 0.75rem 0;
+      background-color: var(--dark);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      transition: var(--transition);
     }
-    .register-container button {
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
+    }
+
+    input::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    button {
       width: 100%;
-      padding: 10px;
-      background-color: #0079bf;
+      padding: 0.85rem;
+      background-color: var(--primary);
       color: white;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
       cursor: pointer;
+      transition: var(--transition);
+      margin-top: 1rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
-    .register-container button:hover {
-      background-color: #005ea6;
+
+    button:hover {
+      background-color: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
     }
+
     .error {
-      color: red;
-      font-size: 12px;
-      margin-top: 5px;
+      color: var(--error);
+      font-size: 0.85rem;
+      margin-top: -0.5rem;
+      margin-bottom: 0.5rem;
+      text-align: left;
       display: none;
+      animation: shake 0.5s ease;
+    }
+
+    .login-link {
+      margin-top: 1.5rem;
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .login-link a {
+      color: var(--primary-light);
+      text-decoration: none;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .login-link a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 1px;
+      bottom: -2px;
+      left: 0;
+      background-color: var(--primary-light);
+      transition: var(--transition);
+    }
+
+    .login-link a:hover::after {
+      width: 100%;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    .password-strength {
+      height: 4px;
+      background-color: var(--dark);
+      border-radius: 2px;
+      margin: 0.5rem 0 1rem;
+      overflow: hidden;
+    }
+
+    .strength-bar {
+      height: 100%;
+      width: 0;
+      background-color: var(--error);
+      transition: width 0.3s ease;
+    }
+
+    @media (max-width: 480px) {
+      .register-container {
+        padding: 1.75rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
 <div class="register-container">
-  <h2>Register to Trello</h2>
+  <img src="https://cdn.worldvectorlogo.com/logos/trello.svg" alt="Trello Logo" class="logo">
+  <h2>Join Trello Today</h2>
+
   <form id="register-form" action="/register/process" method="POST" onsubmit="return validateForm()">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <input type="text" id="username" name="username" placeholder="Username" required>
-    <input type="email" id="email" name="email" placeholder="Email" required>
-    <input type="password" id="password" name="password" placeholder="Password" required>
-    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" required>
-    <div id="password-error" class="error">Passwords do not match</div>
-    <button type="submit">Register</button>
+
+    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+
+    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+    <input type="password" id="password" name="password" placeholder="Create a password" required oninput="checkPasswordStrength()">
+    <div class="password-strength">
+      <div class="strength-bar" id="strength-bar"></div>
+    </div>
+
+    <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm password" required>
+    <div id="password-error" class="error">Passwords don't match</div>
+
+    <button type="submit">Create Account</button>
   </form>
+
+  <div class="login-link">
+    Already have an account? <a href="/login">Sign in</a>
+  </div>
 </div>
 
 <script>
@@ -72,13 +224,34 @@
     const confirmPassword = document.getElementById('confirm-password').value;
     const passwordError = document.getElementById('password-error');
 
-    // Password va Confirm Password tengligini tekshirish
     if (password !== confirmPassword) {
       passwordError.style.display = 'block';
-      return false; // Formani yuborishni to'xtatish
+      return false;
     } else {
       passwordError.style.display = 'none';
-      return true; // Formani yuborishga ruxsat berish
+      return true;
+    }
+  }
+
+  function checkPasswordStrength() {
+    const password = document.getElementById('password').value;
+    const strengthBar = document.getElementById('strength-bar');
+    let strength = 0;
+
+    if (password.length > 0) strength += 20;
+    if (password.length >= 8) strength += 30;
+    if (/[A-Z]/.test(password)) strength += 20;
+    if (/[0-9]/.test(password)) strength += 20;
+    if (/[^A-Za-z0-9]/.test(password)) strength += 10;
+
+    strengthBar.style.width = strength + '%';
+
+    if (strength < 50) {
+      strengthBar.style.backgroundColor = '#f56565';
+    } else if (strength < 80) {
+      strengthBar.style.backgroundColor = '#f6ad55';
+    } else {
+      strengthBar.style.backgroundColor = '#48bb78';
     }
   }
 </script>

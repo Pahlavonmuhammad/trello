@@ -1,12 +1,132 @@
-<!-- templates/error.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Error</title>
+    <meta charset="UTF-8">
+    <title>Something Went Wrong | Trello</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5a67d8;
+            --primary-light: #7f8ff4;
+            --dark: #1a202c;
+            --dark-light: #2d3748;
+            --text: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --error: #f56565;
+            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .error-container {
+            max-width: 600px;
+            padding: 40px;
+            background-color: var(--dark-light);
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.6s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        h1 {
+            color: var(--error);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .home-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .home-link:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            color: var(--error);
+            margin-bottom: 20px;
+            animation: bounce 1.5s infinite alternate;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .error-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Oops! Something went wrong.</h1>
-<p th:text="${message}">An unexpected error occurred.</p>
-<a href="/cabinet" style="color:blue;">Go Home</a>
+<div class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h1>Oops! Something Went Wrong</h1>
+    <p th:text="${message} ?: 'An unexpected error occurred while processing your request.'"></p>
+    <a href="/cabinet" class="home-link">Return to Safety</a>
+</div>
+
+<script>
+    // Add slight delay to animation for better effect
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.error-container');
+        setTimeout(() => {
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        }, 100);
+    });
+</script>
 </body>
 </html>

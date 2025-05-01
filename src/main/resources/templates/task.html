@@ -3,106 +3,241 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Task Board</title>
+    <title>Trello Board</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #5a67d8;
+            --primary-light: #7f8ff4;
+            --dark: #1a202c;
+            --dark-light: #2d3748;
+            --dark-lighter: #3c4658;
+            --text: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --success: #48bb78;
+            --error: #f56565;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
         .board {
             display: flex;
             gap: 20px;
             padding: 20px;
             overflow-x: auto;
+            min-height: calc(100vh - 60px);
+            align-items: flex-start;
         }
 
         .status-column {
-            flex: 1;
-            background-color: #f4f4f4;
-            padding: 10px;
-            border-radius: 10px;
-            min-width: 300px;
+            flex: 0 0 300px;
+            background-color: var(--dark-light);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .status-column:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
 
         .status-title {
             text-align: center;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+            color: var(--text);
+            font-size: 1.1rem;
         }
 
         .task-card {
-            background-color: white;
+            background-color: var(--dark-lighter);
             border-radius: 10px;
-            padding: 10px;
+            padding: 15px;
             margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         .task-image {
             width: 100%;
-            height: 120px;
+            height: 140px;
             object-fit: cover;
             border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .task-image:hover {
+            transform: scale(1.02);
+        }
+
+        .no-image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 140px;
+            background-color: var(--dark-light);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .task-title {
-            margin-top: 8px;
-            font-weight: bold;
-            font-size: 16px;
+            margin-top: 12px;
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--text);
         }
 
         .user-info {
             display: flex;
             align-items: center;
-            margin-top: 8px;
+            margin-top: 12px;
         }
 
         .user-avatar {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 10px;
+            object-fit: cover;
+            border: 2px solid var(--primary);
         }
 
         .task-actions {
             display: flex;
             justify-content: space-between;
-            margin-top: 10px;
+            margin-top: 15px;
+            gap: 8px;
             flex-wrap: wrap;
-            gap: 5px;
         }
 
         .arrow-btn {
-            background: #ddd;
+            background: var(--dark-light);
             border: none;
-            padding: 6px 10px;
-            border-radius: 5px;
-            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 500;
             cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            flex: 1;
+            min-width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow-btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
         }
 
         .admin-actions {
-            position: absolute;
-            top: 10px;
+            position: fixed;
+            top: 20px;
             right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
         }
 
         .admin-actions a {
-            display: inline-block;
-            margin-left: 10px;
-            padding: 8px 16px;
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
             font-size: 14px;
-            background-color: #ddd;
-            border-radius: 5px;
+            background-color: var(--primary);
+            border-radius: 8px;
             text-decoration: none;
-            font-weight: bold;
-            color: black;
+            font-weight: 500;
+            color: white;
+            transition: var(--transition);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .admin-actions a:hover {
-            background-color: #bbb;
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
+        }
+
+        .admin-actions a::before {
+            content: "+";
+            margin-right: 6px;
+            font-weight: bold;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--dark-lighter);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .task-card {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .board {
+                padding: 15px 10px;
+            }
+
+            .status-column {
+                flex: 0 0 280px;
+            }
+
+            .admin-actions {
+                position: static;
+                justify-content: center;
+                margin: 15px 0;
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- Only show to ADMIN or MAINTAINER -->
+<!-- Admin Actions -->
 <div class="admin-actions" sec:authorize="hasAnyRole('ADMIN','MAINTAINER')">
     <a th:href="@{/status/add}">Add Status</a>
     <a th:href="@{/task/add}">Add Task</a>
@@ -110,67 +245,72 @@
 </div>
 
 <div class="board">
-
     <!-- Loop through Statuses -->
     <div class="status-column" th:each="status, iterStat : ${statusList}">
-    <div class="status-title" th:text="${status.name}">Status</div>
+        <div class="status-title" th:text="${status.name}">Status</div>
 
         <!-- Loop through Tasks in this Status -->
         <div class="task-card"
-             th:each="task : ${taskList}"
-             th:if="${task.status.id == status.id}">
+             th:each="task, taskStat : ${taskList}"
+             th:if="${task.status.id == status.id}"
+             style="animation-delay: calc(${taskStat.index} * 0.1s)">
 
             <!-- Task Image -->
             <img class="task-image"
                  th:if="${task.attachment != null}"
                  th:src="@{/images/{id}(id=${task.attachment.id})}"
                  alt="Task Image"/>
-            <span th:if="${task.attachment == null}">No Image</span>
+            <div class="no-image" th:unless="${task.attachment != null}">No Image</div>
 
             <!-- Task Title -->
             <div class="task-title" th:text="${task.title}">Task Title</div>
 
             <!-- User Info -->
             <div class="user-info">
-                <!-- If user and user.attachment are present -->
-                <img th:src="${task.user != null && task.user.attachment != null} ? '/images/' + ${task.user.attachment.id} : '/default.jpg'" alt="Profile Image">
-
-                <!-- If user or user.attachment is missing -->
                 <img class="user-avatar"
-                     th:unless="${task.user != null and task.user.attachment != null}"
-                     src="/default.jpg"
-                     alt="Default Avatar"/>
-                <span th:text="${task.user != null ? task.user.username : 'No User'}">Username</span>
+                     th:src="${task.user != null && task.user.attachment != null} ? '/images/' + ${task.user.attachment.id} : '/default.jpg'"
+                     alt="User Avatar"/>
+                <span th:text="${task.user != null ? task.user.username : 'Unassigned'}">Username</span>
             </div>
 
-            <!-- Task Actions -->
             <!-- Task Actions -->
             <div class="task-actions">
-
-                <!-- Left Button only if it's not the first status column -->
+                <!-- Left Button -->
                 <form th:if="${iterStat.index > 0}" th:action="@{/task/moveLeft/{id}(id=${task.id})}" method="post">
-                    <button class="arrow-btn">&laquo;</button>
+                    <button class="arrow-btn" title="Move Left">&laquo;</button>
                 </form>
 
+                <!-- Comment Button -->
                 <form th:action="@{/task/comment/{id}(id=${task.id})}" method="get">
-                    <button class="arrow-btn">💬</button>
+                    <button class="arrow-btn" title="Comments">💬</button>
                 </form>
+
+                <!-- Update Button -->
                 <form th:action="@{/task/update/{id}(id=${task.id})}" method="get"
                       sec:authorize="hasAnyRole('ADMIN', 'MAINTAINER')">
-                    <button class="arrow-btn">Update</button>
+                    <button class="arrow-btn" title="Edit">✏️</button>
                 </form>
 
-                <!-- Right Button only if it's not the last status column -->
+                <!-- Right Button -->
                 <form th:if="${iterStat.index < statusList.size() - 1}" th:action="@{/task/moveRight/{id}(id=${task.id})}" method="post">
-                    <button class="arrow-btn">&raquo;</button>
+                    <button class="arrow-btn" title="Move Right">&raquo;</button>
                 </form>
-
             </div>
-
         </div>
     </div>
-
 </div>
 
+<script>
+    // Add slight delay to animations for better visual effect
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.task-card');
+        cards.forEach((card, index) => {
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    });
+</script>
 </body>
 </html>

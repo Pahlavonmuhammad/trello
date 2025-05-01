@@ -2,163 +2,313 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Update User</title>
+    <title>Update User | Trello</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* General body styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+        :root {
+            --primary: #5a67d8;
+            --primary-light: #7f8ff4;
+            --dark: #1a202c;
+            --dark-light: #2d3748;
+            --dark-lighter: #3c4658;
+            --text: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --success: #48bb78;
+            --error: #f56565;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        /* Container for the form */
-        form {
-            width: 50%;
-            margin: 30px auto;
-            padding: 20px;
-            background-color: #ffffff;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--dark-light);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            margin: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transform: translateY(0);
+            transition: var(--transition);
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+
+        label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: block;
+            margin: 1.25rem 0 0.75rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        select {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            background-color: var(--dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
+            color: var(--text);
+            font-size: 1rem;
+            transition: var(--transition);
+            margin-bottom: 0.5rem;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
+        }
+
+        input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23a0aec0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 12px;
+            padding-right: 2.5rem;
+        }
+
+        option {
+            background-color: var(--dark-light);
+            color: var(--text);
+        }
+
+        .file-input-container {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 0.85rem 1.5rem;
+            background-color: var(--dark-lighter);
+            color: var(--text);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            border: 1px dashed rgba(255, 255, 255, 0.1);
+            text-align: center;
+            width: 100%;
+        }
+
+        .file-input-label:hover {
+            background-color: var(--dark);
+            border-color: var(--primary);
+        }
+
+        input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .current-attachment {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background-color: var(--dark-lighter);
+            border-radius: 8px;
+        }
+
+        .current-attachment a {
+            color: var(--primary-light);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .current-attachment a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-light);
+            transition: var(--transition);
+        }
+
+        .current-attachment a:hover::after {
+            width: 100%;
+        }
+
+        .current-attachment span {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1.5rem;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Heading style */
-        h2 {
-            text-align: center;
-            font-size: 24px;
-            color: #333;
+        .submit-btn:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
         }
 
-        /* Label styling */
-        label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-            color: #555;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* Input fields styling */
-        input[type="text"], input[type="password"], input[type="email"], select, input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
+        /* Multi-select styling */
+        select[multiple] {
+            height: auto;
+            min-height: 120px;
+            padding: 0.5rem;
+        }
+
+        select[multiple] option {
+            padding: 0.5rem 1rem;
             border-radius: 4px;
-            font-size: 14px;
+            margin: 0.25rem 0;
         }
 
-        /* Button styling */
-        button[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
+        select[multiple] option:hover {
+            background-color: var(--primary);
             color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
         }
 
-        /* Button hover effect */
-        button[type="submit"]:hover {
-            background-color: #45a049;
+        select[multiple] option:checked {
+            background-color: var(--primary);
+            color: white;
         }
 
-        /* Optional file input style */
-        input[type="file"] {
-            padding: 5px;
-        }
-
-        /* Current attachment style */
-        div p {
-            font-size: 14px;
-            color: #555;
-        }
-
-        a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        span {
-            font-style: italic;
-            color: #888;
-        }
-
-        /* Responsive design for small screens */
         @media (max-width: 768px) {
-            form {
-                width: 90%;
+            .container {
+                padding: 1.75rem;
+                margin: 1rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
 
-<h2>Update User</h2>
+<div class="container">
+    <h2>Update User Profile</h2>
 
-<form th:action="@{/user/update/{id}(id=${user.id})}"
-      th:object="${user}"
-      method="post"
-      enctype="multipart/form-data">
+    <form th:action="@{/user/update/{id}(id=${user.id})}"
+          th:object="${user}"
+          method="post"
+          enctype="multipart/form-data">
 
-    <!-- Hidden ID field -->
-    <input type="hidden" th:field="*{id}"/>
+        <!-- Hidden ID field -->
+        <input type="hidden" th:field="*{id}"/>
 
-    <!-- Username -->
-    <label for="username">Username:</label>
-    <input type="text" id="username" th:field="*{username}" required/>
-    <br/>
+        <!-- Username -->
+        <label for="username">Username</label>
+        <input type="text" id="username" th:field="*{username}" required/>
 
-    <!-- Password (optional update) -->
-    <label for="password">Password:</label>
-    <input type="password" id="password" th:field="*{password}" placeholder="Leave blank to keep current password"/>
-    <br/>
+        <!-- Password (optional update) -->
+        <label for="password">Password</label>
+        <input type="password" id="password" th:field="*{password}"
+               placeholder="Leave blank to keep current password"/>
 
-    <!-- Email -->
-    <label for="email">Email:</label>
-    <input type="email" id="email" th:field="*{email}" required/>
-    <br/>
+        <!-- Email -->
+        <label for="email">Email</label>
+        <input type="email" id="email" th:field="*{email}" required/>
 
-    <!-- Roles (multi-select) -->
-    <label for="roles">Roles:</label>
-    <select id="roles" name="roleIds" multiple>
-        <option th:each="role : ${allRoles}"
-                th:value="${role.id}"
-                th:text="${role.role}"
-                th:selected="${user.roles.contains(role)}">
-        </option>
-    </select>
-    <br/>
+        <!-- Roles (multi-select) -->
+        <label for="roles">Roles (Hold Ctrl/Cmd to select multiple)</label>
+        <select id="roles" name="roleIds" multiple>
+            <option th:each="role : ${allRoles}"
+                    th:value="${role.id}"
+                    th:text="${role.role}"
+                    th:selected="${user.roles.contains(role)}">
+            </option>
+        </select>
 
-    <!-- Attachment file upload -->
-    <label for="attachment">New Attachment (optional):</label>
-    <input type="file" id="attachment" name="attachmentFile"/>
-    <br/>
+        <!-- Attachment file upload -->
+        <div class="file-input-container">
+            <label class="file-input-label">📁 Upload New Profile Picture (Optional)</label>
+            <input type="file" id="attachment" name="attachmentFile"/>
+        </div>
 
-    <!-- Show current attachment -->
-    <div>
-        <p>Current Attachment:
-            <span th:if="${user.attachment != null}">
-                <a th:href="@{/images/user/{id}(id=${user.attachment.id})}"
-                   th:text="${user.attachment.name}"
-                   target="_blank">Download</a>
-            </span>
-            <span th:unless="${user.attachment != null}">No Attachment</span>
-        </p>
-    </div>
+        <!-- Show current attachment -->
+        <div class="current-attachment">
+            <p>Current Profile Picture:
+                <span th:if="${user.attachment != null}">
+                    <a th:href="@{/images/user/{id}(id=${user.attachment.id})}"
+                       th:text="${user.attachment.name}"
+                       target="_blank">View</a>
+                </span>
+                <span th:unless="${user.attachment != null}">No profile picture uploaded</span>
+            </p>
+        </div>
 
-    <!-- Submit -->
-    <button type="submit">Update User</button>
+        <!-- Submit -->
+        <button type="submit" class="submit-btn">Update Profile</button>
+    </form>
+</div>
 
-</form>
-
+<script>
+    // Add slight delay to animation for better effect
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.querySelector('.container');
+        setTimeout(() => {
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+        }, 100);
+    });
+</script>
 </body>
 </html>
