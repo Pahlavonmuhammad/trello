@@ -84,7 +84,7 @@
 <body>
 <div class="header">
     <!-- Default rasm, agar user login qilgan bo'lsa attachment tekshiriladi -->
-    <img th:src="${user != null && user.attachment != null} ? ${user.attachment} : '/default.jpg'" alt="Profile Image">
+    <img th:src="${user != null && user.attachment != null} ? '/images/' + ${user.attachment.id} : '/default.jpg'" alt="Profile Image">
 
     <div class="header-buttons">
         <!-- Agar user anonymous bo'lsa -->
@@ -97,6 +97,7 @@
         <div sec:authorize="isAuthenticated()">
             <a href="/logout">Logout</a>
             <a href="/task">See My Pages</a>
+            <a href="/user" sec:authorize="hasRole('ADMIN')">User Control Page</a>
         </div>
     </div>
 </div>

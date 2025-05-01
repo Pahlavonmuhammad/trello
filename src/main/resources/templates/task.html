@@ -106,14 +106,14 @@
 <div class="admin-actions" sec:authorize="hasAnyRole('ADMIN','MAINTAINER')">
     <a th:href="@{/status/add}">Add Status</a>
     <a th:href="@{/task/add}">Add Task</a>
-    <a th:href="@{/task/manage-orders}">Manage Orders</a>
+    <a th:href="@{/status/manage}">Manage Orders</a>
 </div>
 
 <div class="board">
 
     <!-- Loop through Statuses -->
-    <div class="status-column" th:each="status : ${statusList}">
-        <div class="status-title" th:text="${status.name}">Status</div>
+    <div class="status-column" th:each="status, iterStat : ${statusList}">
+    <div class="status-title" th:text="${status.name}">Status</div>
 
         <!-- Loop through Tasks in this Status -->
         <div class="task-card"
@@ -133,10 +133,7 @@
             <!-- User Info -->
             <div class="user-info">
                 <!-- If user and user.attachment are present -->
-                <img class="user-avatar"
-                     th:if="${task.user != null and task.user.attachment != null}"
-                     th:src="@{'/images/user/' + ${task.user.attachment.id}}"
-                     alt="User Avatar"/>
+                <img th:src="${task.user != null && task.user.attachment != null} ? '/images/' + ${task.user.attachment.id} : '/default.jpg'" alt="Profile Image">
 
                 <!-- If user or user.attachment is missing -->
                 <img class="user-avatar"
@@ -147,9 +144,11 @@
             </div>
 
             <!-- Task Actions -->
+            <!-- Task Actions -->
             <div class="task-actions">
 
-                <form th:action="@{/task/moveLeft/{id}(id=${task.id})}" method="post">
+                <!-- Left Button only if it's not the first status column -->
+                <form th:if="${iterStat.index > 0}" th:action="@{/task/moveLeft/{id}(id=${task.id})}" method="post">
                     <button class="arrow-btn">&laquo;</button>
                 </form>
 
@@ -161,7 +160,8 @@
                     <button class="arrow-btn">Update</button>
                 </form>
 
-                <form th:action="@{/task/moveRight/{id}(id=${task.id})}" method="post">
+                <!-- Right Button only if it's not the last status column -->
+                <form th:if="${iterStat.index < statusList.size() - 1}" th:action="@{/task/moveRight/{id}(id=${task.id})}" method="post">
                     <button class="arrow-btn">&raquo;</button>
                 </form>
 

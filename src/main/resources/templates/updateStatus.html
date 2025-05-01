@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Statuses</title>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      border: 1px solid #ccc;
+    }
+    .action-btn {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    function checkDuplicatePositionNumber() {
+      const seen = new Set();
+      for (let input of document.querySelectorAll('.position-number')) {
+        if (seen.has(input.value)) {
+          alert('Duplicate position number detected.');
+          return false;
+        }
+        seen.add(input.value);
+      }
+      return true;
+    }
+    function onSubmit() {
+      return checkDuplicatePositionNumber();
+    }
+  </script>
+</head>
+<body>
+<div class="container">
+  <h2>Manage Statuses</h2>
+
+  <form th:action="@{/status/update}" method="post" onsubmit="return onSubmit()">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <table>
+      <thead>
+      <tr>
+        <th>Status Name</th>
+        <th>Is Active</th>
+        <th>Position #</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="status, iterStat : ${statuses}">
+        <input type="hidden" th:name="${'statuses[' + iterStat.index + '].id'}" th:value="${status.id}" />
+        <td>
+          <input type="text" th:name="${'statuses[' + iterStat.index + '].name'}" th:value="${status.name}" required />
+        </td>
+        <td>
+          <input type="checkbox" th:name="${'statuses[' + iterStat.index + '].is_active'}" th:checked="${status.is_active}" />
+        </td>
+        <td>
+          <input type="number" class="position-number" th:name="${'statuses[' + iterStat.index + '].position_number'}" th:value="${status.position_number}" required />
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div style="text-align:center; margin-top:20px;">
+      <button type="submit" class="action-btn">Update All Statuses</button>
+    </div>
+  </form>
+
+</div>
+</body>
+</html>
