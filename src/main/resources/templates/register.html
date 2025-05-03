@@ -125,14 +125,14 @@
       font-size: 0.95rem;
     }
 
-    .login-link a {
+    .login-link a, .back-btn {
       color: var(--primary-light);
       text-decoration: none;
       transition: var(--transition);
       position: relative;
     }
 
-    .login-link a::after {
+    .login-link a::after, .back-btn::after {
       content: '';
       position: absolute;
       width: 0;
@@ -143,8 +143,27 @@
       transition: var(--transition);
     }
 
-    .login-link a:hover::after {
+    .login-link a:hover::after, .back-btn:hover::after {
       width: 100%;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.85rem 1.5rem;
+      background-color: var(--dark-light);
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background-color: var(--primary);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
     }
 
     @keyframes fadeInUp {
@@ -211,6 +230,13 @@
     <div id="password-error" class="error">Passwords don't match</div>
 
     <button type="submit">Create Account</button>
+    <button type="button" class="back-btn" onclick="history.back()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back
+    </button>
   </form>
 
   <div class="login-link">

@@ -53,7 +53,7 @@
             margin-bottom: 30px;
         }
 
-        .home-link {
+        .home-link, .back-btn {
             display: inline-block;
             padding: 12px 24px;
             background-color: var(--primary);
@@ -63,9 +63,10 @@
             font-weight: 500;
             transition: var(--transition);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
         }
 
-        .home-link:hover {
+        .home-link:hover, .back-btn:hover {
             background-color: var(--primary-light);
             transform: translateY(-2px);
             box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
@@ -116,10 +117,10 @@
     <h1>Oops! Something Went Wrong</h1>
     <p th:text="${message} ?: 'An unexpected error occurred while processing your request.'"></p>
     <a href="/cabinet" class="home-link">Return to Safety</a>
+    <button type="button" class="back-btn" onclick="history.back()">Back</button>
 </div>
 
 <script>
-    // Add slight delay to animation for better effect
     document.addEventListener('DOMContentLoaded', function() {
         const container = document.querySelector('.error-container');
         setTimeout(() => {
