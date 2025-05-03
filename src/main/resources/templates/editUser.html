@@ -179,6 +179,32 @@
             box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
         }
 
+        .back-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: var(--dark-lighter);
+            color: var(--text);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
+        }
+
         .back-link {
             text-align: center;
             margin-top: 1rem;
@@ -264,6 +290,13 @@
 
         <!-- Submit -->
         <button type="submit" class="submit-btn">Update Profile</button>
+        <button type="button" class="back-btn" onclick="history.back()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back
+        </button>
         <div class="back-link">
             <a href="/cabinet">Back to Status List</a>
         </div>

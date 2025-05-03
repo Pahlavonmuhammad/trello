@@ -35,7 +35,7 @@
         }
 
         h1, h2 {
-            color: var(--text);
+            color: varphysics: bold;
             font-weight: 600;
             margin-bottom: 1.5rem;
         }
@@ -243,6 +243,28 @@
             cursor: pointer;
         }
 
+        .back-btn {
+            background-color: var(--dark-light);
+            color: var(--text);
+            padding: 12px 24px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(90, 103, 216, 0.3);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -337,6 +359,13 @@
                 <label>Add to Discussion:</label>
                 <textarea name="comment" placeholder="Share your thoughts..."></textarea><br/>
                 <button type="submit" class="button">💬 Post Comment</button>
+                <button type="button" class="back-btn" onclick="history.back()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back
+                </button>
             </form>
             <div class="back-link">
                 <a href="/task">Back to Status List</a>

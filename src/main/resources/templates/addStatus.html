@@ -173,7 +173,7 @@
             margin-top: 2rem;
         }
 
-        .back-link a {
+        .back-link a, .back-btn {
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.95rem;
@@ -183,16 +183,32 @@
             gap: 0.5rem;
         }
 
-        .back-link a:hover {
+        .back-link a:hover, .back-btn:hover {
             color: var(--electric-green);
         }
 
-        .back-link a svg {
+        .back-link a svg, .back-btn svg {
             transition: var(--transition);
         }
 
-        .back-link a:hover svg {
+        .back-link a:hover svg, .back-btn:hover svg {
             transform: translateX(-5px);
+        }
+
+        .back-btn {
+            padding: 0.85rem 1.5rem;
+            background: var(--space-blue);
+            border: 2px solid var(--space-purple);
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .back-btn:hover {
+            background: var(--space-purple);
+            color: var(--text-primary);
         }
 
         @keyframes floatIn {
@@ -254,6 +270,13 @@
 
         <button type="submit" class="animate__animated animate__pulse animate__delay-3s">
             Create Status
+        </button>
+        <button type="button" class="back-btn animate__animated animate__fadeInUp animate__delay-4s" onclick="history.back()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back
         </button>
     </form>
 
