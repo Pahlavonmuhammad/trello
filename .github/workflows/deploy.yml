@@ -13,7 +13,7 @@ jobs:
       - name: SSH & Deploy to EC2
         uses: appleboy/ssh-action@v1
         with:
-          host: 13.53.75.88  # Replace with your EC2 instance IP
+          host: 13.53.75.88
           username: ubuntu
           key: ${{ secrets.PMF }}
           script: |
