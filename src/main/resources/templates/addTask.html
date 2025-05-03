@@ -1,135 +1,291 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Add New Item</title>
+  <title>Create New Task | Trello</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <style>
-    /* Modern Dark Theme */
+    /* Cosmic Dark Theme */
     :root {
-      --bg-primary: #1e1e2e; /* Soft dark blue-gray */
-      --bg-secondary: #2a2a3a; /* Slightly lighter */
-      --bg-accent: #363646; /* For input fields */
-      --text-primary: #f0f0f5; /* Soft white */
-      --text-secondary: #c0c0d0; /* Light gray */
-      --accent-color: #7eb4ea; /* Soft blue accent */
-      --accent-hover: #6ca4da; /* Slightly darker blue */
-      --success-color: #7eea9d; /* Soft green for submit */
-      --success-hover: #6cda8d;
-      --border-color: #444455;
-      --shadow-color: rgba(0, 0, 0, 0.2);
-      --transition-time: 0.3s;
+      --space-dark: #0f172a;
+      --space-darker: #020617;
+      --nebula-purple: #7c3aed;
+      --electric-blue: #60a5fa;
+      --electric-green: #4ade80;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --glow: 0 0 15px rgba(124, 58, 237, 0.5);
+      --transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
     }
 
     body {
-      font-family: 'Inter', 'Segoe UI', sans-serif;
-      background-color: var(--bg-primary);
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at center, var(--space-dark) 0%, var(--space-darker) 100%);
       color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
-      transition: background-color var(--transition-time) ease;
+      overflow-x: hidden;
     }
 
-    .form-container {
-      background-color: var(--bg-secondary);
+    .cosmic-container {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
       padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px var(--shadow-color);
-      width: 400px;
-      border: 1px solid var(--border-color);
-      transform: translateY(0);
-      transition: all var(--transition-time) ease;
-      animation: gentleFadeIn 0.6s ease-out;
+      border-radius: 24px;
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      box-shadow: var(--glow), 0 12px 36px rgba(0, 0, 0, 0.3);
+      transform: perspective(1000px) rotateX(0deg);
+      transition: var(--transition);
+      animation: cosmicFloatIn 0.8s ease-out forwards;
+      position: relative;
+      overflow: hidden;
     }
 
-    .form-container:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+    .cosmic-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center,
+      rgba(124, 58, 237, 0.1) 0%,
+      transparent 70%);
+      animation: cosmicGlow 8s infinite alternate;
+      z-index: -1;
+    }
+
+    .cosmic-container:hover {
+      transform: perspective(1000px) rotateX(5deg) translateY(-10px);
+      box-shadow: 0 0 30px rgba(124, 58, 237, 0.7), 0 20px 50px rgba(0, 0, 0, 0.4);
     }
 
     h2 {
       text-align: center;
-      margin-bottom: 1.75rem;
-      color: var(--text-primary);
+      margin-bottom: 2rem;
       font-weight: 600;
-      font-size: 1.75rem;
-      letter-spacing: -0.5px;
+      font-size: 2rem;
+      background: linear-gradient(to right, var(--electric-green), var(--electric-blue));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: textPulse 3s infinite alternate;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.8s ease-out;
     }
 
     label {
-      display: block;
-      margin-bottom: 0.75rem;
-      font-weight: 500;
+      position: absolute;
+      top: -10px;
+      left: 15px;
+      background: var(--space-dark);
+      padding: 0 10px;
+      font-size: 0.9rem;
       color: var(--text-secondary);
-      transition: color var(--transition-time) ease;
+      transform: translateY(0);
+      transition: var(--transition);
+      z-index: 1;
     }
 
-    input[type="text"],
-    input[type="file"] {
+    input[type="text"] {
       width: 100%;
-      padding: 0.85rem 1rem;
-      margin-bottom: 1.25rem;
-      background-color: var(--bg-accent);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid rgba(124, 58, 237, 0.3);
+      border-radius: 16px;
       color: var(--text-primary);
       font-size: 1rem;
-      transition: all var(--transition-time) ease;
+      transition: var(--transition);
+      position: relative;
+      z-index: 2;
     }
 
-    input[type="text"]:focus,
-    input[type="file"]:focus {
+    input[type="text"]:focus {
       outline: none;
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 3px rgba(126, 180, 234, 0.2);
+      border-color: var(--electric-blue);
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3);
+      transform: translateY(-3px);
+    }
+
+    input[type="text"]:focus + label {
+      color: var(--electric-blue);
+      transform: translateY(-15px);
+      font-size: 0.8rem;
+    }
+
+    .file-input-container {
+      position: relative;
+      margin: 2rem 0;
+      animation: fadeInUp 0.8s ease-out 0.2s forwards;
+      opacity: 0;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 1.5rem;
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px dashed rgba(124, 58, 237, 0.3);
+      border-radius: 16px;
+      color: var(--text-secondary);
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .file-input-label:hover {
+      border-color: var(--electric-blue);
+      color: var(--electric-blue);
+      transform: translateY(-3px);
+    }
+
+    .file-input-label::before {
+      content: '📁';
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .file-input-label:hover::before {
+      transform: translateY(-5px);
     }
 
     input[type="file"] {
-      padding: 0.5rem;
-      cursor: pointer;
-    }
-
-    input[type="file"]::file-selector-button {
-      padding: 0.5rem 1rem;
-      background-color: var(--bg-accent);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: all var(--transition-time) ease;
-    }
-
-    input[type="file"]::file-selector-button:hover {
-      background-color: var(--bg-secondary);
-    }
-
-    button {
+      position: absolute;
       width: 100%;
-      padding: 0.85rem;
-      background-color: var(--success-color);
-      color: #1a1a2e; /* Dark text for contrast */
-      font-size: 1rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
       cursor: pointer;
-      transition: all var(--transition-time) ease;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      margin-top: 0.5rem;
     }
 
-    button:hover {
-      background-color: var(--success-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    .submit-btn {
+      width: 100%;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, var(--electric-green), var(--electric-blue));
+      color: #111827;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 8px 24px rgba(74, 222, 128, 0.3);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease-out 0.4s forwards;
+      opacity: 0;
     }
 
-    /* Animations */
-    @keyframes gentleFadeIn {
+    .submit-btn:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(74, 222, 128, 0.4);
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+              to bottom right,
+              rgba(255, 255, 255, 0.3),
+              rgba(255, 255, 255, 0)
+      );
+      transform: rotate(30deg);
+      transition: var(--transition);
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 2rem;
+      animation: fadeInUp 0.8s ease-out 0.6s forwards;
+      opacity: 0;
+    }
+
+    .back-link a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .back-link a:hover {
+      color: var(--electric-blue);
+    }
+
+    .back-link a svg {
+      transition: var(--transition);
+    }
+
+    .back-link a:hover svg {
+      transform: translateX(-5px);
+    }
+
+    @keyframes cosmicFloatIn {
       from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: perspective(1000px) rotateX(-15deg) translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: perspective(1000px) rotateX(0deg) translateY(0);
+      }
+    }
+
+    @keyframes cosmicGlow {
+      0%, 100% {
+        transform: translate(0, 0);
+      }
+      25% {
+        transform: translate(10%, 10%);
+      }
+      50% {
+        transform: translate(-5%, -5%);
+      }
+      75% {
+        transform: translate(5%, -10%);
+      }
+    }
+
+    @keyframes textPulse {
+      0% {
+        text-shadow: 0 0 5px rgba(74, 222, 128, 0.3);
+      }
+      50% {
+        text-shadow: 0 0 20px rgba(96, 165, 250, 0.6);
+      }
+      100% {
+        text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
@@ -137,57 +293,86 @@
       }
     }
 
-    /* File upload animation */
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0 0 rgba(126, 180, 234, 0.4); }
-      70% { box-shadow: 0 0 0 8px rgba(126, 180, 234, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(126, 180, 234, 0); }
+    /* Particle animation for file selection */
+    @keyframes particleBurst {
+      0% {
+        transform: scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(10);
+        opacity: 0;
+      }
     }
 
-    .file-selected {
-      animation: pulseGlow 1s;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 480px) {
-      .form-container {
+    @media (max-width: 768px) {
+      .cosmic-container {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
         width: 90%;
-        padding: 1.75rem;
+      }
+
+      h2 {
+        font-size: 1.8rem;
       }
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="form-container">
-  <h2>Add New Item</h2>
+<div class="cosmic-container animate__animated animate__fadeIn">
+  <h2 class="animate__animated animate__fadeInDown">Create New Task</h2>
 
   <form th:action="@{/task/add/process}" method="post" enctype="multipart/form-data">
-    <div>
-      <label for="title">Title (required):</label>
+    <div class="input-group">
       <input type="text" id="title" name="title" required />
+      <label for="title">Task Title</label>
     </div>
 
-    <div>
-      <label for="file">Upload File (optional):</label>
-      <input type="file" id="file" name="file" />
+    <div class="file-input-container">
+      <label class="file-input-label">
+        <span>Drag & drop files or click to browse</span>
+        <input type="file" id="file" name="file" />
+      </label>
     </div>
 
-    <div>
-      <button type="submit">Submit</button>
-    </div>
-    <div class="back-link">
-      <a href="/task">Back to Status List</a>
-    </div>
+    <button type="submit" class="submit-btn">
+      Create Task
+    </button>
   </form>
+
+  <div class="back-link">
+    <a href="/task">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      Back to Dashboard
+    </a>
+  </div>
 </div>
 
 <script>
-  // Add visual feedback when file is selected
-  document.getElementById('file').addEventListener('change', function() {
+  // Add particle effect when file is selected
+  document.getElementById('file').addEventListener('change', function(e) {
     if (this.files.length > 0) {
-      this.classList.add('file-selected');
-      setTimeout(() => this.classList.remove('file-selected'), 1000);
+      const container = document.querySelector('.cosmic-container');
+      const particle = document.createElement('div');
+      particle.style.position = 'absolute';
+      particle.style.width = '10px';
+      particle.style.height = '10px';
+      particle.style.background = 'radial-gradient(circle, var(--electric-blue), transparent)';
+      particle.style.borderRadius = '50%';
+      particle.style.pointerEvents = 'none';
+      particle.style.animation = 'particleBurst 1s forwards';
+      particle.style.left = '50%';
+      particle.style.top = '60%';
+      particle.style.transformOrigin = 'center';
+
+      container.appendChild(particle);
+
+      setTimeout(() => {
+        particle.remove();
+      }, 1000);
     }
   });
 </script>
