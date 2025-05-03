@@ -108,24 +108,60 @@ public class TaskController {
     }
 
     @PostMapping("/task/moveRight/{id}")
-    public String moveRightTask(@PathVariable int id, Model model) {
+    public String shiftTaskRight(@PathVariable int id, Model model) {
         Task task = taskRepository.findById(id);
-        Status status = statusRepository.findFirstByPositionGreaterThan(task.getStatus().getPosition_number());
-        if (status != null) {
-            task.setStatus(status);
+        if (task == null) {
+            model.addAttribute("message", "Task topilmadi!");
+            return "error";
+        }
+
+        int currentPos = task.getStatus().getPosition_number();
+        List<Status> statuses = statusRepository.findByIs_active(true);
+        Status nextStatus = null;
+        int minHigherPos = Integer.MAX_VALUE;
+
+        for (Status status : statuses) {
+            int pos = status.getPosition_number();
+            if (pos > currentPos && pos < minHigherPos) {
+                minHigherPos = pos;
+                nextStatus = status;
+            }
+        }
+
+        if (nextStatus != null) {
+            task.setStatus(nextStatus);
             taskRepository.save(task);
         }
+
         return "redirect:/task";
     }
 
     @PostMapping("/task/moveLeft/{id}")
-    public String moveLeftTask(@PathVariable int id, Model model) {
+    public String shiftTaskLeft(@PathVariable int id, Model model) {
         Task task = taskRepository.findById(id);
-        Status status = statusRepository.findFirstByPositionSmallerThan(task.getStatus().getPosition_number());
-        if (status != null) {
-            task.setStatus(status);
+        if (task == null) {
+            model.addAttribute("message", "Task topilmadi!");
+            return "error";
+        }
+
+        int currentPos = task.getStatus().getPosition_number();
+        List<Status> statuses = statusRepository.findByIs_active(true);
+        Status prevStatus = null;
+        int maxLowerPos = Integer.MIN_VALUE;
+
+        for (Status status : statuses) {
+            int pos = status.getPosition_number();
+            if (pos < currentPos && pos > maxLowerPos) {
+                maxLowerPos = pos;
+                prevStatus = status;
+            }
+        }
+
+        if (prevStatus != null) {
+            task.setStatus(prevStatus);
             taskRepository.save(task);
         }
+
         return "redirect:/task";
     }
 }
