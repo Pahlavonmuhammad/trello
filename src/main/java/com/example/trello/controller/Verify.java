@@ -42,7 +42,7 @@ public class Verify {
             User regsiteredUser=new User();
             regsiteredUser.setEmail(user.getEmail());
             regsiteredUser.setPassword(passwordEncoder.encode(user.getPassword()));
-            regsiteredUser.setUsername(user.getUsername());
+            regsiteredUser.setName(user.getUsername());
             regsiteredUser.set_verified(true);
             Role role=roleRepository.findByRole(Roles.PROGRAMMER.name());
             List<Role> roles=new ArrayList<>();

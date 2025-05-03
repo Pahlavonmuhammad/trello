@@ -14,8 +14,8 @@ public class Register {
         return "register";
     }
     @PostMapping("/register/process")
-    public String register(@RequestParam String username, @RequestParam String email, @RequestParam String password, HttpSession session){
-        UserDTO userDTO = new UserDTO(username,email,password);
+    public String register(@RequestParam String name, @RequestParam String email, @RequestParam String password, HttpSession session){
+        UserDTO userDTO = new UserDTO(name,email,password);
         session.setAttribute("user",userDTO);
         return "redirect:/verify"; // bu yerdan MuhammadQodir boshlaydi va buni filterga tiqishni unutmang
     }

@@ -265,6 +265,14 @@
 <div class="header">
     <img th:src="${user != null && user.attachment != null} ? '/images/' + ${user.attachment.id} : '/default.jpg'" alt="Profile Image">
 
+    <div sec:authorize="isAuthenticated()"
+         style="display: flex; flex-direction: column; justify-content: center; margin-left: 15px;">
+    <span th:text="${user.name}"
+          style="font-size: 16px; color: #333; font-weight: 500;"></span>
+        <a href="/user/edit"
+           style="font-size: 14px; color: #007bff; text-decoration: underline; margin-top: 4px;">Edit</a>
+    </div>
+
     <div class="header-buttons">
         <div sec:authorize="isAnonymous()">
             <a href="/login">Get Started</a>

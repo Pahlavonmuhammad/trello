@@ -7,6 +7,9 @@ import com.example.trello.entity.User;
 import com.example.trello.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -82,7 +85,7 @@ public class UserController {
 
         User user = userRepository.findById(id).orElseThrow();
 
-        user.setUsername(userForm.getUsername());
+        user.setName(userForm.getName());
         user.setEmail(userForm.getEmail());
 
         if (userForm.getPassword() != null && !userForm.getPassword().isBlank()) {
@@ -121,4 +124,43 @@ public class UserController {
         }
         return "redirect:/user";
     }
+    @GetMapping("/user/edit")
+    public String editUser(Model model) {
+        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", user);
+        return "editUser";
+    }
+    @PostMapping("/user/edit/{id}")
+    public String updateUser(@PathVariable Integer id,
+                             @ModelAttribute("user") User userForm,
+                             @RequestParam(value = "attachmentFile", required = false) MultipartFile file) throws IOException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) authentication.getPrincipal();
+        User user = userRepository.findByEmail(currentUser.getEmail()).orElseThrow();
+
+        user.setName(userForm.getName());
+        user.setEmail(userForm.getEmail());
+
+        if (userForm.getPassword() != null && !userForm.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(userForm.getPassword()));
+        }
+
+        if (file != null && !file.isEmpty()) {
+            Attachment attachment = new Attachment();
+            attachment.setFile_type(file.getContentType());
+            attachment.setContent(file.getBytes());
+            attachmentRepository.save(attachment);
+            user.setAttachment(attachment);
+        }
+        Authentication authentication1 = new UsernamePasswordAuthenticationToken(
+                user,
+                user.getPassword(),
+                user.getAuthorities()
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication1);
+
+        userRepository.save(user);
+        return "redirect:/cabinet";
+    }
+
 }
