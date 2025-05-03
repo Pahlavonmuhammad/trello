@@ -338,12 +338,14 @@
                 <textarea name="comment" placeholder="Share your thoughts..."></textarea><br/>
                 <button type="submit" class="button">💬 Post Comment</button>
             </form>
+            <div class="back-link">
+                <a href="/task">Back to Status List</a>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    // Add animation to comments as they load
     document.addEventListener('DOMContentLoaded', function() {
         const comments = document.querySelectorAll('.comment-box');
         comments.forEach((comment, index) => {

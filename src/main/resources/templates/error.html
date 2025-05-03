@@ -2,130 +2,324 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Something Went Wrong | Trello</title>
+    <title>Create New Status | Trello</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         :root {
-            --primary: #5a67d8;
-            --primary-light: #7f8ff4;
-            --dark: #1a202c;
-            --dark-light: #2d3748;
-            --text: #e2e8f0;
-            --text-secondary: #a0aec0;
-            --error: #f56565;
-            --transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --space-blue: #0f172a;
+            --space-blue-light: #1e293b;
+            --space-purple: #7c3aed;
+            --electric-green: #4ade80;
+            --electric-green-hover: #22c55e;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --glow: 0 0 15px rgba(124, 58, 237, 0.5);
+            --transition: all 0.4s cubic-bezier(0.68, -0.6, 0.32, 1.6);
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--dark);
-            color: var(--text);
+            background: radial-gradient(circle at center, var(--space-blue) 0%, #020617 100%);
+            color: var(--text-primary);
             margin: 0;
             padding: 0;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            text-align: center;
-            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        .error-container {
-            max-width: 600px;
-            padding: 40px;
-            background-color: var(--dark-light);
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 0.6s ease-out;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: transparent;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(124, 58, 237, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            box-shadow: var(--glow), 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: perspective(1000px) rotateX(0deg);
+            transition: var(--transition);
+            animation: floatIn 0.8s ease-out forwards;
+        }
+
+        .container:hover {
+            transform: perspective(1000px) rotateX(5deg) translateY(-10px);
+            box-shadow: 0 0 25px rgba(124, 58, 237, 0.7), 0 15px 40px rgba(0, 0, 0, 0.4);
         }
 
         h1 {
-            color: var(--error);
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            text-align: center;
+            margin-bottom: 2rem;
             font-weight: 600;
+            font-size: 2rem;
+            background: linear-gradient(to right, var(--electric-green), var(--space-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: textGlow 2s infinite alternate;
         }
 
-        p {
-            font-size: 1.1rem;
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        label {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--space-blue-light);
+            padding: 0 10px;
+            font-size: 0.9rem;
             color: var(--text-secondary);
-            margin-bottom: 30px;
-        }
-
-        .home-link {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: var(--primary);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
+            transform: translateY(0);
             transition: var(--transition);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1;
         }
 
-        .home-link:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
+        input[type="text"] {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            background: transparent;
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
         }
 
-        .error-icon {
-            font-size: 4rem;
-            color: var(--error);
-            margin-bottom: 20px;
-            animation: bounce 1.5s infinite alternate;
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--electric-green);
+            box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.3);
+            transform: translateY(-3px);
         }
 
-        @keyframes fadeIn {
+        input[type="text"]:focus + label {
+            color: var(--electric-green);
+            transform: translateY(-15px);
+            font-size: 0.8rem;
+        }
+
+        button {
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--electric-green), var(--space-purple));
+            color: #111827;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(74, 222, 128, 0.4);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                    to bottom right,
+                    rgba(255, 255, 255, 0.3),
+                    rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            transition: var(--transition);
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-link a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-link a:hover {
+            color: var(--electric-green);
+        }
+
+        .back-link a svg {
+            transition: var(--transition);
+        }
+
+        .back-link a:hover svg {
+            transform: translateX(-5px);
+        }
+
+        @keyframes floatIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: perspective(1000px) rotateX(-15deg) translateY(30px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: perspective(1000px) rotateX(0deg) translateY(0);
             }
         }
 
-        @keyframes bounce {
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 0 5px rgba(74, 222, 128, 0.3);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(74, 222, 128, 0.6);
+            }
+        }
+
+        @keyframes particleFloat {
             0% {
-                transform: translateY(0);
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
             }
             100% {
-                transform: translateY(-15px);
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
             }
         }
 
         @media (max-width: 768px) {
-            .error-container {
-                padding: 30px 20px;
-                margin: 20px;
+            .container {
+                padding: 2rem 1.5rem;
+                margin: 1rem;
+                width: 90%;
             }
 
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
         }
     </style>
 </head>
 <body>
-<div class="error-container">
-    <div class="error-icon">⚠️</div>
-    <h1>Oops! Something Went Wrong</h1>
-    <p th:text="${message} ?: 'An unexpected error occurred while processing your request.'"></p>
-    <a href="/cabinet" class="home-link">Return to Safety</a>
+<!-- Animated background particles -->
+<div class="particles" id="particles"></div>
+
+<div class="container animate__animated animate__fadeIn">
+    <h1 class="animate__animated animate__fadeInDown">Create New Status</h1>
+
+    <form th:action="@{/status/add/process}" method="post" class="animate__animated animate__fadeIn animate__delay-1s">
+        <div class="input-group">
+            <input type="text" id="name" name="name" required class="animate__animated animate__fadeInLeft"/>
+            <label for="name" class="animate__animated animate__fadeInRight animate__delay-2s">Status Name</label>
+        </div>
+
+        <button type="submit" class="animate__animated animate__pulse animate__delay-3s">
+            Create Status
+        </button>
+    </form>
+
+    <div class="back-link animate__animated animate__fadeInUp animate__delay-4s">
+        <a href="/task">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Dashboard
+        </a>
+    </div>
 </div>
 
 <script>
-    // Add slight delay to animation for better effect
+    // Create animated particles
+    function createParticles() {
+        const particlesContainer = document.getElementById('particles');
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+
+            // Random properties
+            const size = Math.random() * 5 + 2;
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const opacity = Math.random() * 0.5 + 0.1;
+            const animationDuration = Math.random() * 20 + 10;
+            const animationDelay = Math.random() * 10;
+
+            // Apply styles
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}%`;
+            particle.style.top = `${posY}%`;
+            particle.style.opacity = opacity;
+            particle.style.animation = `particleFloat ${animationDuration}s linear ${animationDelay}s infinite`;
+
+            // Add to container
+            particlesContainer.appendChild(particle);
+        }
+    }
+
+    // Initialize particles and animations
     document.addEventListener('DOMContentLoaded', function() {
-        const container = document.querySelector('.error-container');
-        setTimeout(() => {
-            container.style.opacity = '1';
-            container.style.transform = 'translateY(0)';
-        }, 100);
+        createParticles();
+
+        // Add ripple effect to button
+        const button = document.querySelector('button');
+        button.addEventListener('click', function(e) {
+            const x = e.clientX - e.target.getBoundingClientRect().left;
+            const y = e.clientY - e.target.getBoundingClientRect().top;
+
+            const ripple = document.createElement('span');
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            ripple.classList.add('ripple');
+
+            this.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 1000);
+        });
     });
 </script>
 </body>

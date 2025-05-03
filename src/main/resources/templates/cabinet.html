@@ -3,350 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Trello Workspace</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>My Trello Universe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         :root {
-            --primary: #5a67d8;
-            --primary-light: #7f8ff4;
-            --dark: #1a202c;
-            --dark-light: #2d3748;
-            --text: #e2e8f0;
-            --text-secondary: #a0aec0;
-            --success: #48bb78;
-            --card-bg: #2d3748;
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --cosmic-primary: #7c3aed;
+            --cosmic-secondary: #6366f1;
+            --cosmic-dark: #0f172a;
+            --cosmic-darker: #020617;
+            --cosmic-light: #1e293b;
+            --electric-green: #4ade80;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --glow: 0 0 20px rgba(124, 58, 237, 0.6);
+            --transition: all 0.5s cubic-bezier(0.68, -0.6, 0.32, 1.6);
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            background-color: var(--dark);
-            color: var(--text);
-            line-height: 1.6;
+            background: radial-gradient(circle at center, var(--cosmic-dark) 0%, var(--cosmic-darker) 100%);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
         }
 
-        .header {
+        /* Animated cosmic particles */
+        .cosmic-particle {
+            position: fixed;
+            background: rgba(124, 58, 237, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatParticle linear infinite;
+        }
+
+        /* Cosmic Header */
+        .cosmic-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 5%;
-            background: linear-gradient(135deg, var(--dark-light) 0%, var(--dark) 100%);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
             position: relative;
-            z-index: 10;
+            z-index: 100;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
         }
 
-        .header img {
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cosmic-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--primary);
+            border: 3px solid var(--cosmic-primary);
             transition: var(--transition);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 15px rgba(124, 58, 237, 0.4);
         }
 
-        .header img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(90, 103, 216, 0.3);
+        .cosmic-avatar:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 0 25px rgba(124, 58, 237, 0.6);
         }
 
-        .header-buttons {
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .edit-profile {
+            font-size: 0.85rem;
+            color: var(--cosmic-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .edit-profile:hover {
+            text-decoration: underline;
+            color: var(--electric-green);
+        }
+
+        .cosmic-nav {
             display: flex;
             gap: 15px;
         }
 
-        .header-buttons a {
+        .nav-button {
             padding: 10px 20px;
-            background-color: var(--primary);
+            background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
             color: white;
             text-decoration: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 500;
             transition: var(--transition);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .header-buttons a:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(90, 103, 216, 0.3);
-        }
-
-        .welcome-section {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-light) 100%);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
             position: relative;
             overflow: hidden;
         }
 
-        .welcome-section::before {
-            content: "";
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+        }
+
+        .nav-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                    to bottom right,
+                    rgba(255, 255, 255, 0.3),
+                    rgba(255, 255, 255, 0)
+            );
+            transform: rotate(30deg);
+            transition: var(--transition);
+        }
+
+        .nav-button:hover::before {
+            left: 100%;
+        }
+
+        /* Hero Section */
+        .cosmic-hero {
+            text-align: center;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('https://trello.com/assets/d947df93bc055849898e.gif') center/cover no-repeat;
-            opacity: 0.1;
-            z-index: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                    circle at center,
+                    rgba(124, 58, 237, 0.1) 0%,
+                    transparent 70%
+            );
+            z-index: -1;
+            animation: pulseGlow 8s infinite alternate;
         }
 
-        .welcome-section h2 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: white;
-            position: relative;
-            z-index: 1;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        .hero-title {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--electric-green), var(--cosmic-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: textPulse 3s infinite alternate;
+            font-weight: 700;
         }
 
-        .welcome-section p {
-            font-size: 1.2rem;
+        .hero-subtitle {
+            font-size: 1.3rem;
             max-width: 700px;
-            margin: 0 auto 30px;
-            color: var(--text-secondary);
-            position: relative;
-            z-index: 1;
-        }
-
-        .about-trello {
-            padding: 60px 5%;
-            background-color: var(--dark-light);
-            margin: 40px auto;
-            border-radius: 12px;
-            max-width: 1200px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            transform: translateY(0);
-            transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .about-trello:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
-        }
-
-        .about-trello h2 {
-            font-size: 2rem;
-            color: var(--primary-light);
-            margin-bottom: 30px;
-            text-align: center;
-            position: relative;
-        }
-
-        .about-trello h2::after {
-            content: "";
-            display: block;
-            width: 80px;
-            height: 3px;
-            background: var(--primary);
-            margin: 15px auto;
-            border-radius: 3px;
-        }
-
-        .about-trello p {
-            font-size: 1.1rem;
-            line-height: 1.8;
             margin: 0 auto 40px;
-            max-width: 800px;
-            text-align: center;
-            color: var(--text);
+            color: var(--text-secondary);
         }
 
-        .features {
-            display: flex;
-            justify-content: center;
+        /* Features Section */
+        .cosmic-features {
+            padding: 80px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--electric-green), var(--cosmic-primary));
+            margin: 20px auto;
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
-            flex-wrap: wrap;
-            margin-top: 50px;
         }
 
         .feature-card {
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 10px;
-            width: 280px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 30px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
             transition: var(--transition);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: center;
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateX(0deg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                    circle,
+                    rgba(124, 58, 237, 0.1) 0%,
+                    transparent 70%
+            );
+            transition: var(--transition);
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 24px rgba(90, 103, 216, 0.2);
-            border-color: rgba(90, 103, 216, 0.3);
+            transform: perspective(1000px) rotateX(5deg) translateY(-10px);
+            box-shadow: var(--glow), 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(124, 58, 237, 0.4);
         }
 
-        .feature-card h3 {
-            color: var(--primary-light);
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-bottom: 0;
-            text-align: center;
+        .feature-card:hover::before {
+            transform: translate(10%, 10%);
         }
 
         .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--electric-green);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* CTA Section */
+        .cosmic-cta {
+            text-align: center;
+            padding: 100px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-title {
             font-size: 2.5rem;
             margin-bottom: 20px;
-            color: var(--primary);
+            color: var(--text-primary);
         }
 
-        .cta-section {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, var(--dark-light) 0%, var(--dark) 100%);
-        }
-
-        .cta-section h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .cta-section p {
-            font-size: 1.1rem;
-            max-width: 700px;
-            margin: 0 auto 30px;
+        .cta-text {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 40px;
             color: var(--text-secondary);
         }
 
         .cta-button {
             display: inline-block;
-            padding: 12px 30px;
-            background-color: var(--success);
-            color: white;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--electric-green), var(--cosmic-primary));
+            color: #111827;
             text-decoration: none;
-            border-radius: 6px;
-            font-weight: 500;
+            border-radius: 12px;
+            font-weight: 600;
             transition: var(--transition);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(74, 222, 128, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
         .cta-button:hover {
-            background-color: #38a169;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(72, 187, 120, 0.3);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(74, 222, 128, 0.4);
+        }
+
+        /* Animations */
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes textPulse {
+            0% {
+                text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+            }
+            50% {
+                text-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 15px rgba(74, 222, 128, 0.4);
+            }
+        }
+
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: perspective(1000px) rotateX(0deg) translateY(0);
+            }
+            50% {
+                transform: perspective(1000px) rotateX(3deg) translateY(-10px);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
         }
 
         @media (max-width: 768px) {
-            .header {
+            .cosmic-header {
                 flex-direction: column;
                 gap: 20px;
                 padding: 20px;
             }
 
-            .header-buttons {
+            .profile-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .cosmic-nav {
                 flex-wrap: wrap;
                 justify-content: center;
             }
 
-            .features {
-                flex-direction: column;
-                align-items: center;
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
             }
 
             .feature-card {
-                width: 100%;
-                max-width: 350px;
+                padding: 30px 20px;
             }
         }
     </style>
 </head>
 <body>
-<div class="header">
-    <img th:src="${user != null && user.attachment != null} ? '/images/' + ${user.attachment.id} : '/default.jpg'" alt="Profile Image">
+<!-- Cosmic Particles Background -->
+<div id="particles-container"></div>
 
-    <div class="header-buttons">
+<!-- Cosmic Header -->
+<header class="cosmic-header animate__animated animate__fadeInDown">
+    <div class="profile-container">
+        <img class="cosmic-avatar"
+             th:src="${user != null && user.attachment != null} ? '/images/' + ${user.attachment.id} : '/default.jpg'"
+             alt="Cosmic Avatar">
+        <div class="user-info" sec:authorize="isAuthenticated()">
+            <div class="user-name" th:text="${user.name}">User</div>
+            <a href="/user/edit" class="edit-profile">Edit Profile</a>
+        </div>
+    </div>
+
+    <nav class="cosmic-nav">
         <div sec:authorize="isAnonymous()">
-            <a href="/login">Get Started</a>
-            <a href="/register">Join Trello</a>
+            <a href="/login" class="nav-button">Get Started</a>
+            <a href="/register" class="nav-button">Join Trello</a>
         </div>
 
         <div sec:authorize="isAuthenticated()">
-            <a href="/logout">Sign Out</a>
-            <a href="/task">My Boards</a>
-            <a href="/user" sec:authorize="hasRole('ADMIN')">Admin Panel</a>
+            <a href="/logout" class="nav-button">Sign Out</a>
+            <a href="/task" class="nav-button">My Boards</a>
+            <a href="/user" class="nav-button" sec:authorize="hasRole('ADMIN')">Admin Panel</a>
         </div>
-    </div>
-</div>
+    </nav>
+</header>
 
-<div class="welcome-section">
-    <h2>Welcome to Your Productivity Hub</h2>
-    <p>Where ideas take shape and projects come to life. Trello helps you organize work, collaborate with teams, and achieve more together.</p>
-</div>
+<!-- Cosmic Hero Section -->
+<section class="cosmic-hero animate__animated animate__fadeIn">
+    <div class="hero-bg"></div>
+    <h1 class="hero-title">Welcome to Your Cosmic Workspace</h1>
+    <p class="hero-subtitle">Where ideas become reality and productivity reaches new heights. Trello helps you organize work, collaborate with teams, and achieve stellar results.</p>
+</section>
 
-<div class="about-trello">
-    <h2>Why Millions Love Trello</h2>
-    <p>
-        Trello transforms the way teams work together. From startups to Fortune 500 companies, Trello's intuitive boards, lists, and cards enable you to organize and prioritize your projects in a fun, flexible, and rewarding way. Whether you're planning a website redesign, tracking sales leads, or managing personal goals, Trello adapts to fit your needs.
-    </p>
-    <div class="features">
-        <div class="feature-card">
-            <div class="feature-icon">📋</div>
-            <h3>Visual Work Management</h3>
-            <p>See your entire project at a glance with our intuitive board view. Drag and drop tasks as they move through your workflow.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">👥</div>
-            <h3>Team Collaboration</h3>
-            <p>Invite team members, assign tasks with @mentions, and watch productivity soar with real-time updates and notifications.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">⚙️</div>
-            <h3>Powerful Automation</h3>
-            <p>Let Butler, our built-in automation tool, handle repetitive tasks so you can focus on the work that matters most.</p>
-        </div>
-    </div>
-</div>
+<!-- Cosmic Features Section -->
+<section class="cosmic-features">
+    <h2 class="section-title animate__animated animate__fadeIn">Why Trello is Out of This World</h2>
 
-<div class="cta-section">
-    <h2>Ready to Transform Your Workflow?</h2>
-    <p>Join over 50 million users who trust Trello to keep their work organized and their teams productive.</p>
-    <div sec:authorize="isAnonymous()">
-        <a href="/register" class="cta-button">Create Your Free Account</a>
+    <div class="features-grid">
+        <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s">
+            <div class="feature-icon">🚀</div>
+            <h3 class="feature-title">Visual Workflow</h3>
+            <p class="feature-desc">See your entire project at a glance with our intuitive board view. Drag and drop tasks as they move through your workflow.</p>
+        </div>
+
+        <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s">
+            <div class="feature-icon">👨‍🚀</div>
+            <h3 class="feature-title">Team Collaboration</h3>
+            <p class="feature-desc">Invite team members, assign tasks with @mentions, and watch productivity soar with real-time updates.</p>
+        </div>
+
+        <div class="feature-card animate__animated animate__fadeInUp" style="animation-delay: 0.5s">
+            <div class="feature-icon">🤖</div>
+            <h3 class="feature-title">Smart Automation</h3>
+            <p class="feature-desc">Let our built-in automation handle repetitive tasks so you can focus on the work that matters most.</p>
+        </div>
     </div>
-    <div sec:authorize="isAuthenticated()">
-        <a href="/task" class="cta-button">Go to My Boards</a>
+</section>
+
+<!-- Cosmic CTA Section -->
+<section class="cosmic-cta animate__animated animate__fadeIn">
+    <div class="cta-container">
+        <h2 class="cta-title">Ready to Launch Your Productivity?</h2>
+        <p class="cta-text">Join millions of users who trust Trello to keep their work organized and their teams aligned.</p>
+        <div sec:authorize="isAnonymous()">
+            <a href="/register" class="cta-button animate__animated animate__pulse animate__infinite">Create Free Account</a>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <a href="/task" class="cta-button animate__animated animate__pulse animate__infinite">Go to My Boards</a>
+        </div>
     </div>
-</div>
+</section>
 
 <script>
-    // Add animation to feature cards on scroll
+    function createParticles() {
+        const container = document.getElementById('particles-container');
+        const particleCount = 30;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('cosmic-particle');
+
+            const size = Math.random() * 8 + 2;
+            const posX = Math.random() * 100;
+            const posY = Math.random() * 100;
+            const opacity = Math.random() * 0.3 + 0.1;
+            const duration = Math.random() * 20 + 10;
+            const delay = Math.random() * 10;
+            const blur = Math.random() * 5 + 2;
+
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${posX}%`;
+            particle.style.top = `${posY}%`;
+            particle.style.opacity = opacity;
+            particle.style.filter = `blur(${blur}px)`;
+            particle.style.animation = `floatParticle ${duration}s linear ${delay}s infinite`;
+
+            container.appendChild(particle);
+        }
+    }
+
+    function floatCards() {
+        const cards = document.querySelectorAll('.feature-card');
+        cards.forEach((card, index) => {
+            card.style.animation = `cardFloat ${6 + index}s ease-in-out infinite`;
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-        const featureCards = document.querySelectorAll('.feature-card');
+        createParticles();
+        floatCards();
 
         const animateOnScroll = () => {
-            featureCards.forEach((card, index) => {
-                const cardPosition = card.getBoundingClientRect().top;
-                const screenPosition = window.innerHeight / 1.3;
-
-                if(cardPosition < screenPosition) {
-                    setTimeout(() => {
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, index * 150);
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.8) {
+                    el.classList.add('animate__fadeInUp');
                 }
             });
         };
 
-        // Set initial state
-        featureCards.forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        });
-
-        // Run on load and scroll
         animateOnScroll();
+
         window.addEventListener('scroll', animateOnScroll);
     });
 </script>
