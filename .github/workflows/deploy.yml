@@ -1,29 +1,23 @@
-name: Deploy Spring Boot App
+- name: SSH & Deploy to EC2
+  uses: appleboy/ssh-action@v1
+  with:
+    host: 13.53.75.88
+    username: ubuntu
+    key: ${{ secrets.PMF }}
+    script: |
+      export SPRING_PROFILES_ACTIVE=global
+      export TRELLO_DB_PASSWORD=${{ secrets.TRELLO_DB_PASSWORD }}
+      export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
 
-on:
-  push:
-    branches:
-      - main  # You can change this to another branch if needed
+      mkdir -p ~/app && cd ~/app
+      if [ -d .git ]; then git pull origin main; else git clone https://github.com/Pahlavonmuhammad/trello.git .; fi
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+      # Fix permissions on the wrapper
+      chmod +x mvnw
 
-    steps:
-      - name: SSH & Deploy to EC2
-        uses: appleboy/ssh-action@v1
-        with:
-          host: 13.53.75.88
-          username: ubuntu
-          key: ${{ secrets.PMF }}
-          script: |
-            export SPRING_PROFILES_ACTIVE=global
-            export TRELLO_DB_PASSWORD=${{ secrets.TRELLO_DB_PASSWORD }}
-            export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
+      # Build with Maven
+      ./mvnw clean package -DskipTests
 
-            mkdir -p ~/app && cd ~/app
-            if [ -d .git ]; then git pull origin main; else git clone https://github.com/Pahlavonmuhammad/trello.git .; fi
-
-            ./mvnw clean package -DskipTests
-            pkill -f 'java' || true
-            nohup java -jar target/*.jar > app.log 2>&1 &
+      # Restart your app
+      pkill -f 'java' || true
+      nohup java -jar target/*.jar > app.log 2>&1 &
