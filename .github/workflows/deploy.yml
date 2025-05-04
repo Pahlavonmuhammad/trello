@@ -3,7 +3,7 @@ name: Deploy Spring Boot App
 on:
   push:
     branches:
-      - main  # You can change this to another branch if neede
+      - main  # You can change this to another branch if needed
 
 jobs:
   deploy:
@@ -43,7 +43,10 @@ jobs:
 
             # Terminate any running Java processes and restart the app, detached from the session
             pkill -f 'java' || true
-            setsid java -jar target/*.jar > app.log 2>&1 < /dev/null &
+            nohup java -jar target/*.jar > app.log 2>&1 &
+
+            # Disown the process to detach it completely from the SSH session
+            disown
 
             # Signal success so GitHub Actions doesn’t treat the backgrounded script as a failure
             exit 0
