@@ -3,7 +3,7 @@ name: Deploy Spring Boot App
 on:
   push:
     branches:
-      - main  # You can change this to another branch if neede
+      - main  # You can change this to another branch if needed
 
 jobs:
   deploy:
@@ -24,11 +24,8 @@ jobs:
 
             # Navigate to the app directory or clone the repository
             mkdir -p ~/app && cd ~/app
-            if [ -d .git ]; then
-              git pull origin main
-            else
-              git clone https://github.com/Pahlavonmuhammad/trello.git .
-            fi
+            git config pull.rebase true  # Resolve divergent branches issue
+            git pull origin main || git clone https://github.com/Pahlavonmuhammad/trello.git .
 
             # Check if mvnw file exists and set execute permissions
             if [ -f "./mvnw" ]; then
@@ -41,9 +38,10 @@ jobs:
             # Build the application with Maven
             ./mvnw clean package -DskipTests
 
-            # Terminate any running Java processes and restart the app, detached from the session
+            # Terminate any running Java processes and restart the app
             pkill -f 'java' || true
-            nohup java -jar target/*.jar > app.log 2>&1 & disown
+            nohup java -jar target/*.jar > app.log 2>&1 &
 
-            # Signal success so GitHub Actions doesn’t treat the backgrounded script as a failure
+            sleep 5  # Allow some time for the app to start
+
             exit 0
