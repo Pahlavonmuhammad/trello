@@ -44,3 +44,4 @@ jobs:
             # Terminate any running Java processes and restart the app
             pkill -f 'java' || true
             nohup java -jar target/*.jar > app.log 2>&1 &
+            exit 0
