@@ -199,6 +199,48 @@
             box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
         }
 
+        .back-btn {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: var(--dark-lighter);
+            color: var(--text);
+            border: 1px solid var(--primary);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(90, 103, 216, 0.2);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .back-link a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .back-link a:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -235,24 +277,28 @@
         <input type="text" id="title" name="title" th:value="${task.title}" required/>
 
         <!-- User selection -->
-        <label>Assign To:</label>
-        <div class="user-select" th:each="u : ${users}">
-            <input type="radio" name="userId" th:value="${u.id}"
-                   th:checked="${task.user != null and task.user.id == u.id}"/>
-            <span th:text="${u.username}">Username</span>
+        <label>Assign To</label>
+        <div th:each="user : ${allUsers}" class="user-select">
+            <input type="radio" th:id="'user-' + ${user.id}" name="userId"
+                   th:value="${user.id}"
+                   th:checked="${task.user != null and task.user.id == user.id}"/>
+            <label th:for="'user-' + ${user.id}">
+                <span th:text="${user.username}"></span>
+            </label>
         </div>
         <div class="no-user">
-            <input type="radio" name="userId" value="" th:checked="${task.user == null}"/>
-            <span>Unassigned</span>
+            <input type="radio" id="no-user" name="userId" value=""
+                   th:checked="${task.user == null}"/>
+            <label for="no-user">No User</label>
         </div>
 
-        <!-- Existing attachment -->
+        <!-- Current attachment -->
         <div class="attachment-preview" th:if="${task.attachment != null}">
             <label>Current Attachment:</label>
-            <img th:src="@{'/images/' + ${task.attachment.id}}" alt="Task Attachment"/>
+            <img th:src="@{'/images/' + ${task.attachment.id}}" alt="Task attachment"/>
         </div>
 
-        <!-- Upload new attachment -->
+        <!-- New attachment upload -->
         <div class="file-input-container">
             <label class="file-input-label">📁 Upload New Attachment (Optional)</label>
             <input type="file" id="attachment" name="attachment"/>
@@ -260,6 +306,13 @@
 
         <!-- Submit -->
         <button type="submit" class="submit-btn">Update Task</button>
+        <button type="button" class="back-btn" onclick="history.back()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back
+        </button>
         <div class="back-link">
             <a href="/task">Back to Status List</a>
         </div>
@@ -267,7 +320,6 @@
 </div>
 
 <script>
-    // Add slight delay to animation for better effect
     document.addEventListener('DOMContentLoaded', function() {
         const container = document.querySelector('.container');
         setTimeout(() => {
