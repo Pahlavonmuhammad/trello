@@ -3,7 +3,7 @@ name: Deploy Spring Boot App
 on:
   push:
     branches:
-      - main  # You can change this to another branch if neede
+      - main  # You can change this to another branch if needed
 
 jobs:
   deploy:
@@ -17,13 +17,30 @@ jobs:
           username: ubuntu
           key: ${{ secrets.PMF }}
           script: |
+            # Set environment variables
             export SPRING_PROFILES_ACTIVE=global
             export TRELLO_DB_PASSWORD=${{ secrets.TRELLO_DB_PASSWORD }}
             export MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}
 
+            # Navigate to the app directory or clone the repository
             mkdir -p ~/app && cd ~/app
-            if [ -d .git ]; then git pull origin main; else git clone https://github.com/Pahlavonmuhammad/trello.git .; fi
+            if [ -d .git ]; then
+              git pull origin main
+            else
+              git clone https://github.com/Pahlavonmuhammad/trello.git .
+            fi
 
+            # Check if mvnw file exists and set execute permissions
+            if [ -f "./mvnw" ]; then
+              chmod +x mvnw
+            else
+              echo "mvnw file not found, exiting."
+              exit 1
+            fi
+
+            # Build the application with Maven
             ./mvnw clean package -DskipTests
+
+            # Terminate any running Java processes and restart the app
             pkill -f 'java' || true
             nohup java -jar target/*.jar > app.log 2>&1 &
