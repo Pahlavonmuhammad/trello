@@ -3,7 +3,7 @@ name: Deploy Spring Boot App
 on:
   push:
     branches:
-      - main  # You can change this to another branch if neede
+      - main  # You can change this to another branch if needed
 
 jobs:
   deploy:
