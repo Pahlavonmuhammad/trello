@@ -283,7 +283,7 @@
                    th:value="${user.id}"
                    th:checked="${task.user != null and task.user.id == user.id}"/>
             <label th:for="'user-' + ${user.id}">
-                <span th:text="${user.username}"></span>
+                <span th:text="${user.name}"></span>
             </label>
         </div>
         <div class="no-user">

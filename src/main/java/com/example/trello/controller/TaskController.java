@@ -35,7 +35,7 @@ public class TaskController {
     public String updateTask(@PathVariable int id, Model model) {
         Task task = taskRepository.findById(id);
         List<User> users = userRepository.findAll();
-        model.addAttribute("users", users);
+        model.addAttribute("allUsers", users);
         model.addAttribute("task", task);
         return "TaskUpdate";
     }
@@ -62,7 +62,7 @@ public class TaskController {
             setAttachment.setContent(attachment.getBytes());
             attachmentRepository.save(setAttachment);
             task.setAttachment(setAttachment);
-        } else if (task.getAttachment() == null) {
+        } else if (task.getAttachment() != null) {
             Optional<Attachment> defaultAttachment = attachmentRepository.findById(task.getAttachment().getId());
             defaultAttachment.ifPresent(task::setAttachment);
         }
@@ -100,8 +100,8 @@ public class TaskController {
         }
         Task task = new Task();
         task.setTitle(title);
-        Status defaultStatus = statusRepository.findByPosition_number(1);
-        task.setStatus(defaultStatus);
+        List<Status> defaultStatus = statusRepository.findByPosition_number(1);
+        task.setStatus(defaultStatus.getFirst());
         task.setAttachment(setAttachment);
         taskRepository.save(task);
         return "redirect:/task";
